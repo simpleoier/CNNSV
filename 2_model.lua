@@ -1,43 +1,6 @@
 require 'torch'   -- torch
 require 'image'   -- for image transforms
 require 'nn'      -- provides all sorts of trainable modules/layers
-
-----------------------------------------------------------------------
--- parse command line arguments
-if not opt then
-   print '==> processing options'
-   cmd = torch.CmdLine()
-   cmd:text()
-   cmd:text('Speaker Verification with DNN')
-   cmd:text()
-   cmd:text('Options:')
-   cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
-   cmd:option('-visualize', true, 'visualize input data and weights during training')
-   cmd:text()
-   opt = cmd:parse(arg or {})
-end
-
-----------------------------------------------------------------------
-print '==> define parameters'
-
-noutputs = 2
-
--- input dimensions
---nfeats = 3
---width = 32
---height = 32
---ninputs = nfeats*width*height
-ninputs = 440
-
--- number of hidden units (for MLP only):
-nhiddens = ninputs / 2
-
--- hidden units, filter sizes (for ConvNet only):
-nstates = {1024, 1024, 1024, 1024}
---filtsize = 5
---poolsize = 2
---normkernel = image.gaussian1D(7)
-
 ----------------------------------------------------------------------
 print '==> construct model'
 
@@ -118,10 +81,10 @@ elseif opt.model == 'deepneunet' then
    for i = 1,#nstates-1 do
       model:add(nn.Linear(nstates[i], nstates[i+1]))
       model:add(nn.PReLU())
-      model:add(nn.BatchNormalization(nstates[i+1]))
+      -- model:add(nn.BatchNormalization(nstates[i+1]))
    end
    model:add(nn.Linear(nstates[#nstates], noutputs))
-   model:add(nn.SoftMax())
+   model:add(nn.LogSoftMax())
 else
 
    error('unknown -model')

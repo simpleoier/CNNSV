@@ -1,30 +1,7 @@
 require 'torch'   -- torch
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
-
 ----------------------------------------------------------------------
--- parse command line arguments
-if not opt then
-   print '==> processing options'
-   cmd = torch.CmdLine()
-   cmd:text()
-   cmd:text('Speaker Verification with DNN')
-   cmd:text()
-   cmd:text('Options:')
-   cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
-   cmd:option('-visualize', false, 'visualize input data and weights during training')
-   cmd:option('-plot', false, 'live plot')
-   cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
-   cmd:option('-learningRate', 1e-3, 'learning rate at t=0')
-   cmd:option('-batchSize', 1, 'mini-batch size (1 = pure stochastic)')
-   cmd:option('-weightDecay', 0, 'weight decay (SGD only)')
-   cmd:option('-momentum', 0, 'momentum (SGD only)')
-   cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
-   cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
-   cmd:text()
-   opt = cmd:parse(arg or {})
-end
-
 ----------------------------------------------------------------------
 -- CUDA?
 if opt.type == 'cuda' then
@@ -36,7 +13,10 @@ end
 print '==> defining some tools'
 
 -- classes
-classes = {'0','1'}
+classes = {}
+for i=1,noutputs do
+  classes[#classes+1] = ''..i
+end
 
 -- This matrix records the current confusion across classes
 confusion = optim.ConfusionMatrix(classes)
@@ -142,9 +122,7 @@ function train()
                        -- evaluate function for complete mini batch
                        for i = 1,#inputs do
                           -- estimate f
-                          --print(inputs[i])
                           local output = model:forward(inputs[i])
-                          --print(output)
                           local err = criterion:forward(output, targets[i])
                           f = f + err
 
@@ -153,7 +131,7 @@ function train()
                           model:backward(inputs[i], df_do)
 
                           -- update confusion
-                          confusion:add(output, targets[i])
+                          -- confusion:add(output, targets[i])
                        end
 
                        -- normalize gradients and f(X)
@@ -178,7 +156,7 @@ function train()
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    -- print confusion matrix
-   print(confusion)
+   -- print(confusion)
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}

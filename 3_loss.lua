@@ -1,26 +1,6 @@
 require 'torch'   -- torch
 require 'nn'      -- provides all sorts of loss functions
-
 ----------------------------------------------------------------------
--- parse command line arguments
-if not opt then
-   print '==> processing options'
-   cmd = torch.CmdLine()
-   cmd:text()
-   cmd:text('Speaker Verification with DNN')
-   cmd:text()
-   cmd:text('Options:')
-   cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
-   cmd:text()
-   opt = cmd:parse(arg or {})
-
-   -- to enable self-contained execution:
-   model = nn.Sequential()
-end
-
--- 10-class problem
-noutputs = 183
-
 ----------------------------------------------------------------------
 print '==> define loss'
 
