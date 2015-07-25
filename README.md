@@ -1,2 +1,6 @@
 # Training a DNN for speaker verification with torch
-th doall.lua -scpfile fbanklist
+Training
+th traindoall.lua -scpfile fbanklist(train)
+
+Test
+th testdoall.lua  -scpfile fbanklist(test)

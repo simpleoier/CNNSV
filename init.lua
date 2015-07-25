@@ -1,3 +1,9 @@
+require 'torch'   -- torch
+require 'os'   --
+require 'nn'      -- provides a normalization operator
+require 'xlua'    -- xlua provides useful tools, like progress bars
+require 'optim'   -- an optimization package, for online and batch methods
+
 if not (opt) then
     cmd = torch.CmdLine()
     cmd:text()
@@ -27,6 +33,7 @@ if not (opt) then
     cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
     cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
+    cmd:option('-MaxEpochs', 3, 'maximum nb of iterations for training')
     cmd:text()
     opt = cmd:parse(arg or {})
 end
@@ -60,3 +67,17 @@ nhiddens = ninputs / 2
 nstates = {1024, 1024, 1024, 1024}
 --filtsize = 5
 --poolsize = 2
+-- classes
+classes = {}
+for i=1,noutputs do
+  classes[#classes+1] = ''..i
+end
+
+sum = 0
+
+-- This matrix records the current confusion across classes
+confusion = optim.ConfusionMatrix(classes)
+
+-- Log results to files
+trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
+testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))

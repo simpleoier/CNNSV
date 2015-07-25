@@ -1,5 +1,5 @@
-require 'torch'   -- torch
-require 'nn'      -- provides all sorts of loss functions
+-- require 'torch'   -- torch
+-- require 'nn'      -- provides all sorts of loss functions
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 print '==> define loss'
@@ -19,7 +19,7 @@ elseif opt.loss == 'nll' then
    -- be properly normalized log-probabilities, which can be
    -- achieved using a softmax function
 
-   model:add(nn.LogSoftMax())
+   -- model:add(nn.LogSoftMax())
 
    -- The loss works like the MultiMarginCriterion: it takes
    -- a vector of classes, and the index of the grountruth class

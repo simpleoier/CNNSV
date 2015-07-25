@@ -1,8 +1,11 @@
-require 'torch'   -- torch
-require 'xlua'    -- xlua provides useful tools, like progress bars
-require 'optim'   -- an optimization package, for online and batch methods
+-- require 'torch'   -- torch
+-- require 'xlua'    -- xlua provides useful tools, like progress bars
+-- require 'optim'   -- an optimization package, for online and batch methods
 ----------------------------------------------------------------------
 print '==> defining test procedure'
+
+-- This matrix records the current confusion across classes
+confusion = optim.ConfusionMatrix(classes)
 
 -- test function
 function test()
@@ -41,7 +44,11 @@ function test()
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    -- print confusion matrix
-   print(confusion)
+   -- print(confusion)
+   confusion:__tostring__()
+   print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+   print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+   print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update log/plot
    testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}

@@ -1,14 +1,16 @@
-require 'torch'   -- torch
-require 'image'   -- for image transforms
-require 'nn'      -- provides all sorts of trainable modules/layers
+-- require 'torch'   -- torch
+-- require 'image'   -- for image transforms
+-- require 'nn'      -- provides all sorts of trainable modules/layers
 ----------------------------------------------------------------------
 print '==> load model'
    -- save/log current net
 local filename = paths.concat(opt.save, 'model.net')
-model = torch.load(filename)
+model = io.open(filename, 'rb')
 
 if (model) then
    print ('find model '..filename)
+   model:close()
+   model = torch.load(filename)
 else
    print ('==> model in '..filename..' is not found')
    print '==> construct model'

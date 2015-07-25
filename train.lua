@@ -1,6 +1,6 @@
-require 'torch'   -- torch
-require 'xlua'    -- xlua provides useful tools, like progress bars
-require 'optim'   -- an optimization package, for online and batch methods
+-- require 'torch'   -- torch
+-- require 'xlua'    -- xlua provides useful tools, like progress bars
+-- require 'optim'   -- an optimization package, for online and batch methods
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 -- CUDA?
@@ -8,23 +8,7 @@ if opt.type == 'cuda' then
    model:cuda()
    criterion:cuda()
 end
-
 ----------------------------------------------------------------------
-print '==> defining some tools'
-
--- classes
-classes = {}
-for i=1,noutputs do
-  classes[#classes+1] = ''..i
-end
-
--- This matrix records the current confusion across classes
-confusion = optim.ConfusionMatrix(classes)
-
--- Log results to files
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
-
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
 -- into a 1-dim vector
@@ -131,7 +115,7 @@ function train()
                           model:backward(inputs[i], df_do)
 
                           -- update confusion
-                          -- confusion:add(output, targets[i])
+                          confusion:add(output, targets[i])
                        end
 
                        -- normalize gradients and f(X)
@@ -157,6 +141,10 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
+   confusion:__tostring__()
+   print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+   print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+   print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
