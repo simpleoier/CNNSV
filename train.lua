@@ -80,6 +80,8 @@ function train()
       -- create mini batch
       local inputs = {}
       local targets = {}
+      -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
+      -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffle[i]]
@@ -92,39 +94,50 @@ function train()
 
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
-                       -- get new parameters
-                       if x ~= parameters then
-                          parameters:copy(x)
-                       end
+         -- get new parameters
+         if x ~= parameters then
+           parameters:copy(x)
+         end
 
-                       -- reset gradients
-                       gradParameters:zero()
+         -- reset gradients
+         gradParameters:zero()
 
-                       -- f is the average of all criterions
-                       local f = 0
+         -- f is the average of all criterions
+         local f = 0
 
-                       -- evaluate function for complete mini batch
-                       for i = 1,#inputs do
-                          -- estimate f
-                          local output = model:forward(inputs[i])
-                          local err = criterion:forward(output, targets[i])
-                          f = f + err
+         -- evaluate function for complete mini batch
+         for i = 1,#inputs do
+            -- estimate f
+            local output = model:forward(inputs[i])
+            local err = criterion:forward(output, targets[i])
+            f = f + err
 
-                          -- estimate df/dW
-                          local df_do = criterion:backward(output, targets[i])
-                          model:backward(inputs[i], df_do)
+            -- estimate df/dW
+            local df_do = criterion:backward(output, targets[i])
+            model:backward(inputs[i], df_do)
 
-                          -- update confusion
-                          confusion:add(output, targets[i])
-                       end
+            -- update confusion
+            confusion:add(output, targets[i])
+         end
 
-                       -- normalize gradients and f(X)
-                       gradParameters:div(#inputs)
-                       f = f/#inputs
+         -- local outputs = model:forward(inputs)
+         -- print(targets[1][1])
+         -- local err = criterion:forward(outputs, targets)
+         -- f = f + err
 
-                       -- return f and df/dX
-                       return f,gradParameters
-                    end
+         -- -- estimate df/dW
+         -- local df_do = criterion:backward(outputs, targets)
+         -- model:backward(inputs, df_do)
+         -- -- update confusion
+         -- confusion:add(output, targets)
+
+         -- normalize gradients and f(X)
+         gradParameters:div(#inputs)
+         f = f/#inputs
+
+         -- return f and df/dX
+         return f,gradParameters
+         end
 
       -- optimize on current mini-batch
       if optimMethod == optim.asgd then

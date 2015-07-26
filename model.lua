@@ -5,7 +5,7 @@
 print '==> load model'
    -- save/log current net
 local filename = paths.concat(opt.save, 'model.net')
-model = io.open(filename, 'rb')
+-- model = io.open(filename, 'rb')
 
 if (model) then
    print ('find model '..filename)

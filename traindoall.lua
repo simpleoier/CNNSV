@@ -12,8 +12,15 @@ dofile 'test.lua'
 ----------------------------------------------------------------------
 print '==> training!'
 
-trainReadData()
-
-for i = 1, opt.MaxEpochs do
-   train()
+local trainfbankfilelist = opt.scpfile
+local listfile = io.open(trainfbankfilelist, 'r')
+while (true) do
+    trainData = ReadData(listfile)
+    if (trainData:size()>0) then
+        shuffle = torch.randperm(trainData:size())
+        train()
+    else
+        break;
+    end
 end
+listfile:close()

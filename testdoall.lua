@@ -11,6 +11,14 @@ dofile 'test.lua'
 ----------------------------------------------------------------------
 print(" ==> testing")
 
-testReadData()
-
-test()
+local trainfbankfilelist = opt.scpfile
+local listfile = io.open(trainfbankfilelist, 'r')
+while (true) do
+    if (testData:size()>0) then
+        testData = ReadData(listfile)
+        test()
+    else
+        break
+    end
+end
+listfile:close()

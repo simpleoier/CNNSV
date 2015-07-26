@@ -2,10 +2,9 @@
 -- require 'os'   --
 -- require 'nn'      -- provides a normalization operator
 math.randomseed(os.time())
-print("read data")
 ----------------------------------------------------------------------
 function readfbank(filename, lines)
-   file = io.open(filename, 'r')
+   local file = io.open(filename, 'r')
    if not(file) then
       print("Error "..filename.." does not exist")
       return 0
@@ -39,44 +38,28 @@ function parsefbank(lines, data, labels)
    end
 end
 
-function trainReadData()
-   trlines = {}
-   local trainfbankfilelist = opt.scpfile
-   local listfile = io.open(trainfbankfilelist, 'r')
-   for line in listfile:lines() do
-      local fbankfilename = line
-      readfbank(fbankfilename, trlines)
+function ReadData(listfile)
+   local lines = {}
+   local curlinenum = 0
+   while (curlinenum<20) do
+      local line = listfile:read()
+      if (line~=nil) then
+         local fbankfilename = line
+         readfbank(fbankfilename, lines)
+      else
+         break
+      end
    end
 
-   trdata = torch.Tensor(#trlines, ninputs)
-   trlabels = torch.Tensor(#trlines,1)
+   local tdata = torch.Tensor(#lines, ninputs)
+   local tlabels = torch.Tensor(#lines,1)
 
-   parsefbank(trlines, trdata, trlabels)
+   parsefbank(lines, tdata, tlabels)
 -- print(trlabels)
-   trainData = {
-      data = trdata,
-      labels = trlabels,
-      size = function() return trsize end
+   local Data = {
+      data = tdata,
+      labels = tlabels,
+      size = function() return #lines end
    }
-end
-
-function testReadData()
-   telines = {}
-   local testfbankfilelist = opt.scpfile
-   local listfile = io.open(testfbankfilelist, 'r')
-   for line in listfile:lines() do
-      local fbankfilename = line
-      readfbank(fbankfilename, telines)
-   end
-
-   tedata = torch.Tensor(#telines, ninputs)
-   telabels = torch.Tensor(#telines,1)
-
-   parsefbank(telines, tedata, telabels)
--- print(trlabels)
-   testData = {
-      data = tedata,
-      labels = telabels,
-      size = function() return tesize end
-   }
+   return Data
 end
