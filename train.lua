@@ -68,7 +68,7 @@ function train()
    model:training()
 
    -- shuffle at each epoch
-   shuffle = torch.randperm(trsize)
+   -- shuffle = torch.randperm(trsize)
 
    -- do one epoch
    print('==> doing epoch on training data:')
