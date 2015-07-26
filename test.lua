@@ -1,7 +1,3 @@
--- require 'torch'   -- torch
--- require 'xlua'    -- xlua provides useful tools, like progress bars
--- require 'optim'   -- an optimization package, for online and batch methods
-----------------------------------------------------------------------
 print '==> defining test procedure'
 
 -- This matrix records the current confusion across classes

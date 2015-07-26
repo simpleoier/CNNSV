@@ -1,6 +1,3 @@
--- require 'torch'   -- torch
--- require 'os'   --
--- require 'nn'      -- provides a normalization operator
 math.randomseed(os.time())
 ----------------------------------------------------------------------
 function readfbank(filename, lines)

@@ -1,6 +1,3 @@
--- require 'torch'   -- torch
--- require 'image'   -- for image transforms
--- require 'nn'      -- provides all sorts of trainable modules/layers
 ----------------------------------------------------------------------
 print '==> load model'
    -- save/log current net
