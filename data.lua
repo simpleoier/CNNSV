@@ -41,7 +41,8 @@ end
 function ReadData(listfile)
    local lines = {}
    local curlinenum = 0
-   while (curlinenum<10) do
+   while (curlinenum<opt.filenum) do
+      curlinenum = curlinenum+1
       local line = listfile:read()
       if (line~=nil) then
          local fbankfilename = line
