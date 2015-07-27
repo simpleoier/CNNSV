@@ -3,6 +3,7 @@ require 'os'   --
 require 'nn'      -- provides a normalization operator
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
+require 'readModelParameters'
 
 if not (opt) then
     cmd = torch.CmdLine()
@@ -20,7 +21,8 @@ if not (opt) then
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
     cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
-    cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
+    cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
+    cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
