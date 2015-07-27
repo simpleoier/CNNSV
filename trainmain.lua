@@ -5,7 +5,7 @@ dofile 'data.lua'
 dofile 'model.lua'
 dofile 'loss.lua'
 dofile 'train.lua'
-dofile 'test.lua'
+-- dofile 'test.lua'
 
 ----------------------------------------------------------------------
 print '==> training!'
