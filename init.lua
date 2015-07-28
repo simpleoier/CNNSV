@@ -55,7 +55,6 @@ print '==> define parameters'
 
 -- trsize = 181
 -- tesize = 181
---featdim = 1320
 noutputs = 2910
 -- input dimensions
 --nfeats = 3
@@ -65,8 +64,8 @@ noutputs = 2910
 ninputs = 1320
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
--- hidden units, filter sizes (for ConvNet only):
-nstates = {1024, 1024, 1024, 1024}
+-- hidden units
+nstates = {1024,1024,1024}
 --filtsize = 5
 --poolsize = 2
 -- classes

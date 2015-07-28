@@ -35,7 +35,7 @@ function parsefbank(lines, data, labels)
    end
 end
 
-function ReadData(listfile)
+function readData(listfile)
    local lines = {}
    local curlinenum = 0
    while (curlinenum<opt.filenum) do

@@ -10,13 +10,22 @@ dofile 'train.lua'
 ----------------------------------------------------------------------
 print '==> training!'
 
+-- Check if the scpfile argument is given and the scpfile can be found
+if not opt.scpfile then
+    error("Please specify a file containing the data with -scpfile")
+    return
+elseif io.open(opt.scpfile,"rb") == nil then
+    error(string.format("Given scp file %s cannot be found!",opt.scpfile))
+    return
+end
+
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
 while (true) do
-    trainData = ReadData(listfile)
+    trainData = readData(listfile)
     if (trainData:size()>0) then
-        shuffle = torch.randperm(trainData:size())
-        train()
+        local shuffleddata = torch.randperm(trainData:size())
+        train(shuffleddata)
     else
         break
     end
@@ -39,3 +48,4 @@ listfile:close()
 --     print(model:get(1).weight[1][3],model:get(1).weight[1][30],model:get(1).weight[1][300],model:get(1).weight[3][360],model:get(1).weight[23][960])
 -- end
 -- listfile:close()
+

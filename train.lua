@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
-function train()
+function train(stuffleddata)
 
    -- epoch tracker
    epoch = epoch or 1
@@ -72,22 +72,24 @@ function train()
    for t = 1,trainData:size(),opt.batchSize do
       -- disp progress
       xlua.progress(t, trainData:size())
-
       -- create mini batch
-      local inputs = {}
-      local targets = {}
-      -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
-      -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
+      -- local inputs = {}
+      -- local targets = {}
+      -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffle[i]]
          local target = trainData.labels[shuffle[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
+         inputs[i-t+1] = input
+         targets[i-t+1] = target
       end
 
+      targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
          -- get new parameters
@@ -102,44 +104,45 @@ function train()
          local f = 0
 
          -- evaluate function for complete mini batch
-         for i = 1,#inputs do
-            -- estimate f
-            local output = model:forward(inputs[i])
-            local err = criterion:forward(output, targets[i])
-            f = f + err
+         -- for i = 1,inputs:size(1) do
+         --    -- estimate f
+         --    local output = model:forward(inputs[i])
+         --    local err = criterion:forward(output, targets[i])
+         --    f = f + err
 
-            -- estimate df/dW
-            local df_do = criterion:backward(output, targets[i])
-            model:backward(inputs[i], df_do)
+         --    -- estimate df/dW
+         --    local df_do = criterion:backward(output, targets[i])
+         --    model:backward(inputs[i], df_do)
 
-            -- update confusion
-            confusion:add(output, targets[i])
-         end
+         --    -- update confusion
+         --    confusion:add(output, targets[i])
+         -- end
 
-         -- local outputs = model:forward(inputs)
-         -- print(targets[1][1])
-         -- local err = criterion:forward(outputs, targets)
-         -- f = f + err
+         local outputs = model:forward(inputs)
+         -- for k=1, outputs:size(1) do
+         --    -- print(k,targets[k],outputs[k][targets[k]])
+         --    print(k,targets[k],outputs[k][1])
+         -- end
+         -- print(targets:size())
+         local err = criterion:forward(outputs, targets)
+         f = f + err
 
-         -- -- estimate df/dW
-         -- local df_do = criterion:backward(outputs, targets)
-         -- model:backward(inputs, df_do)
-         -- -- update confusion
-         -- confusion:add(output, targets)
+         -- estimate df/dW
+         local df_do = criterion:backward(outputs, targets)
+         model:backward(inputs, df_do)
+         -- update confusion
+         confusion:batchAdd(outputs, targets)
 
          -- normalize gradients and f(X)
-         gradParameters:div(#inputs)
-         f = f/#inputs
-
-         -- return f and df/dX
-         return f,gradParameters
+         gradParameters:div(inputs:size(1))
+         f = f/inputs:size(1)
+         
+         -- optimize on current mini-batch
+         if optimMethod == optim.asgd then
+            _,_,average = optimMethod(feval, parameters, optimState)
+         else
+            optimMethod(feval, parameters, optimState)
          end
-
-      -- optimize on current mini-batch
-      if optimMethod == optim.asgd then
-         _,_,average = optimMethod(feval, parameters, optimState)
-      else
-         optimMethod(feval, parameters, optimState)
       end
    end
 
@@ -157,7 +160,7 @@ function train()
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   -- trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
