@@ -43,6 +43,7 @@ function ReadData(listfile)
       local line = listfile:read()
       if (line~=nil) then
          local fbankfilename = line
+	 print("Reading fbank from "..fbankfilename)
          readfbank(fbankfilename, lines)
       else
          break

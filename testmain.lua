@@ -1,5 +1,3 @@
--- require 'torch'
-----------------------------------------------------------------------
 print '==> executing all'
 
 dofile 'init.lua'
@@ -10,6 +8,10 @@ dofile 'loss.lua'
 dofile 'test.lua'
 ----------------------------------------------------------------------
 print(" ==> testing")
+
+-- remove the last two layer
+model:remove()
+model:remove()
 
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
