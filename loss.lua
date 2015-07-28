@@ -45,7 +45,7 @@ elseif opt.loss == 'mse' then
       -- convert training labels:
       local trsize = (#trainData.labels)[1]
       local trlabels = torch.Tensor( trsize, noutputs )
-      trlabels:fill(2)
+      trlabels:fill(0)
       for i = 1,trsize do
          trlabels[{ i,trainData.labels[i] }] = 1
       end
@@ -54,13 +54,12 @@ elseif opt.loss == 'mse' then
       -- convert test labels
       local tesize = (#testData.labels)[1]
       local telabels = torch.Tensor( tesize, noutputs )
-      telabels:fill(-1)
+      telabels:fill(0)
       for i = 1,tesize do
          telabels[{ i,testData.labels[i] }] = 1
       end
       testData.labels = telabels
    end
-
 else
 
    error('unknown -loss')
