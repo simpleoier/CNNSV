@@ -76,20 +76,21 @@ function train()
       -- create mini batch
       -- local inputs = {}
       -- local targets = {}
-      local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
-      local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
-      -- targets = torch.squeeze(targets)
-      targets = targets:squeeze(2)
-      -- for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
-      --    -- load new sample
-      --    local input = trainData.data[shuffle[i]]
-      --    local target = trainData.labels[shuffle[i]]
-      --    if opt.type == 'double' then input = input:double()
-      --    elseif opt.type == 'cuda' then input = input:cuda() end
-      --    table.insert(inputs, input)
-      --    table.insert(targets, target)
-      -- end
+      -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
+         -- load new sample
+         local input = trainData.data[shuffle[i]]
+         local target = trainData.labels[shuffle[i]]
+         if opt.type == 'double' then input = input:double()
+         elseif opt.type == 'cuda' then input = input:cuda() end
+         inputs[i-t+1] = input
+         targets[i-t+1] = target
+      end
 
+      targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
          -- get new parameters
@@ -156,7 +157,7 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
