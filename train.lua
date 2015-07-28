@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
-function train()
+function train(stuffleddata)
 
    -- epoch tracker
    epoch = epoch or 1
@@ -80,8 +80,8 @@ function train()
       -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
-         local input = trainData.data[shuffle[i]]
-         local target = trainData.labels[shuffle[i]]
+         local input = trainData.data[stuffleddata[i]]
+         local target = trainData.labels[stuffleddata[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
          table.insert(inputs, input)
@@ -150,13 +150,13 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   -- trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
