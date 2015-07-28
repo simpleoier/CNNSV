@@ -150,7 +150,8 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   -- confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
