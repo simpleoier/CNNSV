@@ -73,73 +73,51 @@ function train(stuffleddata)
       -- disp progress
       xlua.progress(t, trainData:size())
 
-      -- create mini batch
-      local inputs = {}
-      local targets = {}
-      -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
-      -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
-      for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
-         -- load new sample
-         local input = trainData.data[stuffleddata[i]]
-         local target = trainData.labels[stuffleddata[i]]
-         if opt.type == 'double' then input = input:double()
-         elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
-      end
+      -- create mini batches from the data
+      local datasize =math.min(trainData:size()-t+1,opt.batchSize)
+      if datasize>0 then
+         local inputs = trainData.data:narrow(1,t,datasize)
+         local targets = trainData.labels:narrow(1,t,datasize)
+         local targets = targets:squeeze(2)
 
-      -- create closure to evaluate f(X) and df/dX
-      local feval = function(x)
-         -- get new parameters
-         if x ~= parameters then
-           parameters:copy(x)
-         end
+         -- create closure to evaluate f(X) and df/dX
+         local feval = function(x)
+            -- get new parameters
+            if x ~= parameters then
+              parameters:copy(x)
+            end
+            -- reset gradients
+            gradParameters:zero()
 
-         -- reset gradients
-         gradParameters:zero()
-
-         -- f is the average of all criterions
-         local f = 0
-
-         -- evaluate function for complete mini batch
-         for i = 1,#inputs do
-            -- estimate f
-            local output = model:forward(inputs[i])
-            local err = criterion:forward(output, targets[i])
+            -- f is the average of all criterions
+            local f = 0
+            -- Calculate model outputs
+            local outputs = model:forward(inputs)
+            local err = criterion:forward(outputs, targets)
             f = f + err
 
-            -- estimate df/dW
-            local df_do = criterion:backward(output, targets[i])
-            model:backward(inputs[i], df_do)
+            -- -- estimate df/dW
+            local df_do = criterion:backward(outputs, targets)
+            model:backward(inputs, df_do)
+            -- -- -- update confusion
+            confusion:batchAdd(outputs, targets)
 
-            -- update confusion
-            confusion:add(output, targets[i])
+
+            -- normalize gradients and f(X)
+            gradParameters:div(inputs:size(1))
+            f = f/inputs:size(1)
+
+            -- return f and df/dX
+            return f,gradParameters
+            end
+         -- for i = 1,#inputs do
+
+         -- optimize on current mini-batch
+         if optimMethod == optim.asgd then
+            _,_,average = optimMethod(feval, parameters, optimState)
+         else
+            optimMethod(feval, parameters, optimState)
          end
-
-         -- local outputs = model:forward(inputs)
-         -- print(targets[1][1])
-         -- local err = criterion:forward(outputs, targets)
-         -- f = f + err
-
-         -- -- estimate df/dW
-         -- local df_do = criterion:backward(outputs, targets)
-         -- model:backward(inputs, df_do)
-         -- -- update confusion
-         -- confusion:add(output, targets)
-
-         -- normalize gradients and f(X)
-         gradParameters:div(#inputs)
-         f = f/#inputs
-
-         -- return f and df/dX
-         return f,gradParameters
-         end
-
-      -- optimize on current mini-batch
-      if optimMethod == optim.asgd then
-         _,_,average = optimMethod(feval, parameters, optimState)
-      else
-         optimMethod(feval, parameters, optimState)
       end
    end
 
