@@ -1,3 +1,14 @@
+-- th preparedata scpfile globalnorm mlffile outputdir
+--require 'torch'
+function readmlf(filename)
+   fin = io.open(filename,'r')
+   label = {}
+   for line in fin:lines() do
+      local l = line:split(' ')
+      label[l[1]] = l[2]
+   end
+end
+
 function parseline(str)
    local t = {}
    for k,v in string.gmatch(str, "%S*") do
@@ -8,7 +19,7 @@ function parseline(str)
    return t
 end
 
-function readglobalnorm(filename)
+function readglobaltransf(filename)
    fin = io.open(filename,'r')
    line = fin:read()
    line = fin:read()
@@ -63,6 +74,10 @@ function readfile(inputfile)
          break
       end
    end
+   dim_fea = #frame[1]
+   if (dim_fea*11~=#means) then
+      print("Feature dimension "..dim_fea.." does not match globalnorm dimension "..#means)
+   end
    return frame
 end
 
@@ -74,11 +89,15 @@ function writefile(outputfile, frame)
          t[#t+1] = frame[i][j]
       end
    end
+   chunk = outputfile:split('/')
+   chunk = chunk[#chunk]
+   chunk = chunk:split('_')
+   lab = chunk[1]..'_'..chunk[3]
    for i=1,#frame-10 do
-      fout:write("1 ")
+      fout:write(label[lab]..' ')
       ss = ''
-      for j=1, 1320 do
-         ss = ss..(t[j+120*(i-1)]+means[j])*window[j]..' '
+      for j=1, #means do
+         ss = ss..(t[j+dim_fea*(i-1)]+means[j])*window[j]..' '
       end
       ss = ss..'\n'
       fout:write(ss)
@@ -86,12 +105,14 @@ function writefile(outputfile, frame)
    fout:close()
 end
 
-readglobalnorm(arg[2])
+readmlf(arg[3])
+readglobaltransf(arg[2])
 finscp = io.open(arg[1],'r')
 for line in finscp:lines() do
    line = string.gsub(line, "^%s*(.-)%s*$", "%1")
    frame = readfile(line)
-   filename = line:split('/')[9]
+   filename = line:split('/')
+   filename = filename[#filename]
    filename = filename:split('%.')[1]
-   writefile(arg[3]..filename,frame)
+   writefile(arg[4]..filename,frame)
 end
