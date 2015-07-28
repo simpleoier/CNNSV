@@ -13,7 +13,7 @@ print '==> training!'
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
 while (true) do
-    trainData = ReadData(listfile)
+    trainData = readData(listfile)
     if (trainData:size()>0) then
         shuffle = torch.randperm(trainData:size())
         train()

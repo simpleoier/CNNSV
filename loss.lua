@@ -45,7 +45,7 @@ elseif opt.loss == 'mse' then
       -- convert training labels:
       local trsize = (#trainData.labels)[1]
       local trlabels = torch.Tensor( trsize, noutputs )
-      trlabels:fill(-1)
+      trlabels:fill(2)
       for i = 1,trsize do
          trlabels[{ i,trainData.labels[i] }] = 1
       end

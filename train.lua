@@ -74,19 +74,21 @@ function train()
       xlua.progress(t, trainData:size())
 
       -- create mini batch
-      local inputs = {}
-      local targets = {}
-      -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
-      -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
-      for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
-         -- load new sample
-         local input = trainData.data[shuffle[i]]
-         local target = trainData.labels[shuffle[i]]
-         if opt.type == 'double' then input = input:double()
-         elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
-      end
+      -- local inputs = {}
+      -- local targets = {}
+      local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      -- targets = torch.squeeze(targets)
+      targets = targets:squeeze(2)
+      -- for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
+      --    -- load new sample
+      --    local input = trainData.data[shuffle[i]]
+      --    local target = trainData.labels[shuffle[i]]
+      --    if opt.type == 'double' then input = input:double()
+      --    elseif opt.type == 'cuda' then input = input:cuda() end
+      --    table.insert(inputs, input)
+      --    table.insert(targets, target)
+      -- end
 
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
@@ -102,34 +104,38 @@ function train()
          local f = 0
 
          -- evaluate function for complete mini batch
-         for i = 1,#inputs do
-            -- estimate f
-            local output = model:forward(inputs[i])
-            local err = criterion:forward(output, targets[i])
-            f = f + err
+         -- for i = 1,inputs:size(1) do
+         --    -- estimate f
+         --    local output = model:forward(inputs[i])
+         --    local err = criterion:forward(output, targets[i])
+         --    f = f + err
 
-            -- estimate df/dW
-            local df_do = criterion:backward(output, targets[i])
-            model:backward(inputs[i], df_do)
+         --    -- estimate df/dW
+         --    local df_do = criterion:backward(output, targets[i])
+         --    model:backward(inputs[i], df_do)
 
-            -- update confusion
-            confusion:add(output, targets[i])
-         end
+         --    -- update confusion
+         --    confusion:add(output, targets[i])
+         -- end
 
-         -- local outputs = model:forward(inputs)
-         -- print(targets[1][1])
-         -- local err = criterion:forward(outputs, targets)
-         -- f = f + err
+         local outputs = model:forward(inputs)
+         -- for k=1, outputs:size(1) do
+         --    -- print(k,targets[k],outputs[k][targets[k]])
+         --    print(k,targets[k],outputs[k][1])
+         -- end
+         -- print(targets:size())
+         local err = criterion:forward(outputs, targets)
+         f = f + err
 
-         -- -- estimate df/dW
-         -- local df_do = criterion:backward(outputs, targets)
-         -- model:backward(inputs, df_do)
-         -- -- update confusion
-         -- confusion:add(output, targets)
+         -- estimate df/dW
+         local df_do = criterion:backward(outputs, targets)
+         model:backward(inputs, df_do)
+         -- update confusion
+         confusion:batchAdd(outputs, targets)
 
          -- normalize gradients and f(X)
-         gradParameters:div(#inputs)
-         f = f/#inputs
+         gradParameters:div(inputs:size(1))
+         f = f/inputs:size(1)
 
          -- return f and df/dX
          return f,gradParameters
