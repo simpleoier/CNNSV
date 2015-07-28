@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
-function train()
+function train(stuffleddata)
 
    -- epoch tracker
    epoch = epoch or 1
@@ -72,7 +72,6 @@ function train()
    for t = 1,trainData:size(),opt.batchSize do
       -- disp progress
       xlua.progress(t, trainData:size())
-
       -- create mini batch
       -- local inputs = {}
       -- local targets = {}
@@ -137,16 +136,13 @@ function train()
          -- normalize gradients and f(X)
          gradParameters:div(inputs:size(1))
          f = f/inputs:size(1)
-
-         -- return f and df/dX
-         return f,gradParameters
+         
+         -- optimize on current mini-batch
+         if optimMethod == optim.asgd then
+            _,_,average = optimMethod(feval, parameters, optimState)
+         else
+            optimMethod(feval, parameters, optimState)
          end
-
-      -- optimize on current mini-batch
-      if optimMethod == optim.asgd then
-         _,_,average = optimMethod(feval, parameters, optimState)
-      else
-         optimMethod(feval, parameters, optimState)
       end
    end
 
@@ -163,7 +159,7 @@ function train()
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   -- trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
