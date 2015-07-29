@@ -1,4 +1,3 @@
-----------------------------------------------------------------------
 -- CUDA?
 if opt.type == 'cuda' then
    model:cuda()
@@ -52,7 +51,7 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
-function train(stuffleddata)
+function train(shuffleddata)
 
    -- epoch tracker
    epoch = epoch or 1
@@ -72,52 +71,62 @@ function train(stuffleddata)
    for t = 1,trainData:size(),opt.batchSize do
       -- disp progress
       xlua.progress(t, trainData:size())
+      -- create mini batch
+      -- local inputs = {}
+      -- local targets = {}
+      -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
+         -- load new sample
+         local input = trainData.data[shuffleddata[i]]
+         local target = trainData.labels[shuffleddata[i]]
+         if opt.type == 'double' then input = input:double()
+         elseif opt.type == 'cuda' then input = input:cuda() end
+         inputs[i-t+1] = input
+         targets[i-t+1] = target
+      end
+      targets = targets:squeeze(2)
+      -- create closure to evaluate f(X) and df/dX
+      local feval = function(x)
+                        -- get new parameters
+                        if x ~= parameters then
+                           parameters:copy(x)
+                        end
 
-      -- create mini batches from the data
-      local datasize =math.min(trainData:size()-t+1,opt.batchSize)
-      if datasize>0 then
-         local inputs = trainData.data:narrow(1,t,datasize)
-         local targets = trainData.labels:narrow(1,t,datasize)
-         local targets = targets:squeeze(2)
+                        -- reset gradients
+                        gradParameters:zero()
 
-         -- create closure to evaluate f(X) and df/dX
-         local feval = function(x)
-            -- get new parameters
-            if x ~= parameters then
-              parameters:copy(x)
-            end
-            -- reset gradients
-            gradParameters:zero()
+                        -- f is the average of all criterions
+                        local f = 0
+                        local outputs = model:forward(inputs)
+                        -- for k=1, outputs:size(1) do
+                        --    -- print(k,targets[k],outputs[k][targets[k]])
+                        --    print(k,targets[k],outputs[k][1])
+                        -- end
+                        -- print(targets:size())
+                        local err = criterion:forward(outputs, targets)
+                        f = f + err
 
-            -- f is the average of all criterions
-            local f = 0
-            -- Calculate model outputs
-            local outputs = model:forward(inputs)
-            local err = criterion:forward(outputs, targets)
-            f = f + err
+                        -- estimate df/dW
+                        local df_do = criterion:backward(outputs, targets)
+                        model:backward(inputs, df_do)
+                        -- update confusion
+                        confusion:batchAdd(outputs, targets)
 
-            -- -- estimate df/dW
-            local df_do = criterion:backward(outputs, targets)
-            model:backward(inputs, df_do)
-            -- -- -- update confusion
-            confusion:batchAdd(outputs, targets)
+                        -- normalize gradients and f(X)
+                        gradParameters:div(inputs:size(1))
+                        f = f/inputs:size(1)
+                        -- return f and df/dX
+                        return f,gradParameters
+                    end
 
-
-            -- normalize gradients and f(X)
-            gradParameters:div(inputs:size(1))
-            f = f/inputs:size(1)
-
-            -- return f and df/dX
-            return f,gradParameters
-            end
-         -- for i = 1,#inputs do
-
-         -- optimize on current mini-batch
-         if optimMethod == optim.asgd then
-            _,_,average = optimMethod(feval, parameters, optimState)
-         else
-            optimMethod(feval, parameters, optimState)
-         end
+      -- optimize on current mini-batch
+      if optimMethod == optim.asgd then
+         _,_,average = optimMethod(feval, parameters, optimState)
+      else
+         optimMethod(feval, parameters, optimState)
       end
    end
 
@@ -134,7 +143,7 @@ function train(stuffleddata)
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
    -- update logger/plot
-   -- trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()

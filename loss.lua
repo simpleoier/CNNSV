@@ -24,45 +24,42 @@ elseif opt.loss == 'nll' then
 
    criterion = nn.ClassNLLCriterion()
 
--- Dont need the MSE, we do speaker recognition, only multiclass classification
+elseif opt.loss == 'mse' then
 
--- elseif opt.loss == 'mse' then
+   -- for MSE, we add a tanh, to restrict the model's output
+   model:add(nn.Tanh())
 
---    -- for MSE, we add a tanh, to restrict the model's output
---    model:add(nn.Tanh())
+   -- The mean-square error is not recommended for classification
+   -- tasks, as it typically tries to do too much, by exactly modeling
+   -- the 1-of-N distribution. For the sake of showing more examples,
+   -- we still provide it here:
 
---    -- The mean-square error is not recommended for classification
---    -- tasks, as it typically tries to do too much, by exactly modeling
---    -- the 1-of-N distribution. For the sake of showing more examples,
---    -- we still provide it here:
+   criterion = nn.MSECriterion()
+   criterion.sizeAverage = false
 
---    criterion = nn.MSECriterion()
---    criterion.sizeAverage = false
+   -- Compared to the other losses, the MSE criterion needs a distribution
+   -- as a target, instead of an index. Indeed, it is a regression loss!
+   -- So we need to transform the entire label vectors:
 
---    -- Compared to the other losses, the MSE criterion needs a distribution
---    -- as a target, instead of an index. Indeed, it is a regression loss!
---    -- So we need to transform the entire label vectors:
+   if trainData then
+      -- convert training labels:
+      local trsize = (#trainData.labels)[1]
+      local trlabels = torch.Tensor( trsize, noutputs )
+      trlabels:fill(0)
+      for i = 1,trsize do
+         trlabels[{ i,trainData.labels[i] }] = 1
+      end
+      trainData.labels = trlabels
 
---    if trainData then
---       -- convert training labels:
---       local trsize = (#trainData.labels)[1]
---       local trlabels = torch.Tensor( trsize, noutputs )
---       trlabels:fill(-1)
---       for i = 1,trsize do
---          trlabels[{ i,trainData.labels[i] }] = 1
---       end
---       trainData.labels = trlabels
-
---       -- convert test labels
---       local tesize = (#testData.labels)[1]
---       local telabels = torch.Tensor( tesize, noutputs )
---       telabels:fill(-1)
---       for i = 1,tesize do
---          telabels[{ i,testData.labels[i] }] = 1
---       end
---       testData.labels = telabels
---    end
-
+      -- convert test labels
+      local tesize = (#testData.labels)[1]
+      local telabels = torch.Tensor( tesize, noutputs )
+      telabels:fill(0)
+      for i = 1,tesize do
+         telabels[{ i,testData.labels[i] }] = 1
+      end
+      testData.labels = telabels
+   end
 else
 
    error('unknown -loss')
