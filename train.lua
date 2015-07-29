@@ -78,16 +78,20 @@ function train()
       local targets = {}
       -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
       -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
+      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffle[i]]
          local target = trainData.labels[shuffle[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
+         -- table.insert(inputs, input)
+         -- table.insert(targets, target)
+         inputs[i-t+1] = input
+         targets[i-t+1] = target
       end
-
+      targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
          -- get new parameters
@@ -102,34 +106,28 @@ function train()
          local f = 0
 
          -- evaluate function for complete mini batch
-         for i = 1,#inputs do
-            -- estimate f
-            local output = model:forward(inputs[i])
-            local err = criterion:forward(output, targets[i])
-            f = f + err
 
-            -- estimate df/dW
-            local df_do = criterion:backward(output, targets[i])
-            model:backward(inputs[i], df_do)
-
-            -- update confusion
-            confusion:add(output, targets[i])
+         local outputs = model:forward(inputs)
+         -- print(targets[1][1])
+         local err = criterion:forward(outputs, targets)
+         f = f + err
+         -- -- estimate df/dW
+         local df_do = criterion:backward(outputs, targets)
+         model:backward(inputs, df_do)
+         -- -- update confusion
+         confusion:batchAdd(outputs, targets)
+	
+	 for i=1,inputs:size(1) do
+            if (targets[i]~=outputs[i]) then
+  	       wrong = wrong+1
+	    else
+               correct = correct+1
+            end
          end
 
-         -- local outputs = model:forward(inputs)
-         -- print(targets[1][1])
-         -- local err = criterion:forward(outputs, targets)
-         -- f = f + err
-
-         -- -- estimate df/dW
-         -- local df_do = criterion:backward(outputs, targets)
-         -- model:backward(inputs, df_do)
-         -- -- update confusion
-         -- confusion:add(output, targets)
-
          -- normalize gradients and f(X)
-         gradParameters:div(#inputs)
-         f = f/#inputs
+         gradParameters:div(inputs:size(1))
+         f = f/inputs:size(1)
 
          -- return f and df/dX
          return f,gradParameters
@@ -150,10 +148,12 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   -- confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+   print('correct and wrong' .. correct ..' ' .. wrong)
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}

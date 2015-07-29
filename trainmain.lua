@@ -9,7 +9,8 @@ dofile 'train.lua'
 
 ----------------------------------------------------------------------
 print '==> training!'
-
+wrong = 0
+correct = 0
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
 while (true) do

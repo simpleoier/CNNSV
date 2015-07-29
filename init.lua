@@ -56,7 +56,7 @@ print '==> define parameters'
 -- trsize = 181
 -- tesize = 181
 --featdim = 1320
-noutputs = 2910
+noutputs = 873
 -- input dimensions
 --nfeats = 3
 --width = 32

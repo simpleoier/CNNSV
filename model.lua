@@ -109,7 +109,7 @@ if (model==nil) then
          for i = 1,#nstates-1 do
             model:add(nn.Linear(nstates[i], nstates[i+1]))
             model:add(nn.PReLU())
-            -- model:add(nn.BatchNormalization(nstates[i+1]))
+            model:add(nn.BatchNormalization(nstates[i+1]))
          end
          model:add(nn.Linear(nstates[#nstates], noutputs))
          model:add(nn.LogSoftMax())
