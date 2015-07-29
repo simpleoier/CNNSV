@@ -77,12 +77,13 @@ function train(shuffleddata)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffleddata[i]]
-         local target = trainData.labels[shuffleddata[i]]
+         local target = trainData.labels[shuffleddata[i]][1]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
          table.insert(inputs, input)
          table.insert(targets, target)
       end
+      -- targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
@@ -108,6 +109,22 @@ function train(shuffleddata)
 
                           -- update confusion
                           confusion:add(output, targets[i])
+
+                          local maxind,maxpred
+                          maxind = 1 maxpred = output[1]
+                          for j=2,output:size(1) do
+                              if (output[j]>maxpred) then
+                                 maxpred = output[j]
+                                 maxind = j
+                              end
+                          end
+                          
+                          -- print(maxind,targets[i],maxind==targets[i])
+                          -- if (maxind==targets[i]) then
+                          --    correct = correct+1
+                          -- else
+                          --    wrong = wrong+1
+                          -- end
                        end
 
                         -- normalize gradients and f(X)

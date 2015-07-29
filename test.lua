@@ -16,11 +16,20 @@ function test()
 
    -- test over test data
    print('==> testing on test set:')
-   local inputs = testData.data
-   local targets = testData.labels
-   local preds = model:forward(inputs)
-   print(targets)
-   confusion:batchAdd(preds, targets)
+   for t = 1,testData:size() do
+      -- disp progress
+      xlua.progress(t, testData:size())
+
+      -- get new sample
+      local input = testData.data[t]
+      if opt.type == 'double' then input = input:double()
+      elseif opt.type == 'cuda' then input = input:cuda() end
+      local target = testData.labels[t][1]
+
+      -- test sample
+      local pred = model:forward(input)
+      confusion:add(pred, target)
+   end
    -- end
 
    -- timing
