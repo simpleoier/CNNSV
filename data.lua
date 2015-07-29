@@ -35,7 +35,7 @@ function parsefbank(lines, data, labels)
    end
 end
 
-function ReadData(listfile)
+function readData(listfile)
    local lines = {}
    local curlinenum = 0
    while (curlinenum<opt.filenum) do
@@ -43,7 +43,7 @@ function ReadData(listfile)
       local line = listfile:read()
       if (line~=nil) then
          local fbankfilename = line
-	 print("Reading fbank from "..fbankfilename)
+         print("Reading fbank from "..fbankfilename)
          readfbank(fbankfilename, lines)
       else
          break

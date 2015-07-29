@@ -1,0 +1,21 @@
+awk -F/ '{print $NF}' wavlist | awk -F. '{print substr($1,1,7)}' | sort -u | awk '{print $0,NR}' > tmp.mlf
+awk -F/ '{print $NF}' wavlist | awk -F. '{print $1}' > tmp1.mlf
+awk 'NR==FNR{a[$1]=$2;i++}NR>FNR{print $0,a[substr($0,1,7)]}' tmp.mlf tmp1.mlf > eval.mlf
+
+awk -F/ '{print "/slfs1/users/yl710/htk/HTKTools/HList",$0,"> feature_cmvn/txt/"$NF}' fbank.scp > fbankbin2txt.sh
+awk -F/ '{print "/slfs1/users/xkc09/FeatExtra/RSR2015fbankeval/feature_cmvn/txt/" $NF}' wavlist | sed 's/wav/fbank/g' > norm.scp
+
+split -a 2 -d -n 5 fbankbin2txt.sh fbankbin2txt
+qsub -P cpu.p -cwd fbankbin2txt00
+qsub -P cpu.p -cwd fbankbin2txt01
+qsub -P cpu.p -cwd fbankbin2txt02
+qsub -P cpu.p -cwd fbankbin2txt03
+qsub -P cpu.p -cwd fbankbin2txt04
+
+cd ../../CNNRSR2015/preparedata/
+
+qsub -P cpu.p -cwd preparedataeval1.sh
+qsub -P cpu.p -cwd preparedataeval2.sh
+qsub -P cpu.p -cwd preparedataeval3.sh
+qsub -P cpu.p -cwd preparedataeval4.sh
+qsub -P cpu.p -cwd preparedataeval5.sh

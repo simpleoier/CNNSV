@@ -1,3 +1,14 @@
+-- th preparedata scpfile globalnorm mlffile outputdir
+--require 'torch'
+function readmlf(filename)
+   fin = io.open(filename,'r')
+   label = {}
+   for line in fin:lines() do
+      local l = line:split(' ')
+      label[l[1]] = l[2]
+   end
+end
+
 function parseline(str)
    local t = {}
    for k,v in string.gmatch(str, "%S*") do
@@ -8,24 +19,32 @@ function parseline(str)
    return t
 end
 
-function readglobalnorm(filename)
+-- Reading in the global transform which is already preprocessed in bash
+-- The global transform already has already calcualted the parameters -\mu and 1/\sigma
+-- as the mean and the inverse covariance respectively
+function readglobaltransf(filename)
+
    fin = io.open(filename,'r')
    line = fin:read()
    line = fin:read()
-   dim_bias = tonumber(line:split(' ')[2])
+   -- First read in the biases of the transforms, which are useless
+   -- dim_bias = tonumber(line:split(' ')[2])
    line = fin:read()
    meansstr = line:split(' ')
    means = {}
+   -- Convert all the means to a number
    for i = 1,#meansstr do
       means[i] = tonumber(meansstr[i])
    end
    line = fin:read()
    line = fin:read()
+   -- dim_window is the dimension of the input vector to the dnn
    dim_window = tonumber(line:split(' ')[2])
    line = fin:read()
    line = fin:read()
    windowstr = line:split(' ')
    window = {}
+   -- Reading in the 1/sigma aka variances
    for i = 1,#windowstr do
       window[i] = tonumber(windowstr[i])
    end
@@ -63,35 +82,60 @@ function readfile(inputfile)
          break
       end
    end
+   dim_fea = #frame[1]
+   if (dim_fea*11~=#means) then
+      print("Feature dimension "..dim_fea.." does not match globalnorm dimension "..#means)
+   end
    return frame
 end
 
-function writefile(outputfile, frame)
+-- Writes out the outputfile and normalizes its frames with T-norm
+function writefile(outputfile, frame,extframe)
+   -- Open out the outputfile
    fout = io.open(outputfile,'w')
+   -- Default is 5 frames left and right
+   extframe = extframe or 5
    t = {}
+   -- Concatenate the frames to one large string
    for i=1,#frame do
       for j = 1,#frame[i] do
          t[#t+1] = frame[i][j]
       end
    end
-   for i=1,#frame-10 do
-      fout:write("1 ")
+   chunk = outputfile:split('/')
+   chunk = chunk[#chunk]
+   chunk = chunk:split('_')
+   lab = chunk[1]..'_'..chunk[3]
+   --We extend the frame window left and right by extframe frames
+   for i=1,#frame-(2*extframe) do
+      fout:write(label[lab]..' ')
       ss = ''
-      for j=1, 1320 do
-         ss = ss..(t[j+120*(i-1)]+means[j])*window[j]..' '
+      -- Apply T-Norm here, T-Norm is defined as:
+      -- ss = (ss_old - mu)/cov
+      for j=1, #means do
+         ss = ss..(t[j+dim_fea*(i-1)]+means[j])*window[j]..' '
       end
+      -- add the newline
       ss = ss..'\n'
       fout:write(ss)
    end
    fout:close()
 end
 
-readglobalnorm(arg[2])
+if #arg ~= 4 then
+   print ("Please use the following syntax:")
+   print ("th preparedata.lua scpfile globaltransf mlffile outputfile")
+   return
+end
+
+readmlf(arg[3])
+readglobaltransf(arg[2])
 finscp = io.open(arg[1],'r')
 for line in finscp:lines() do
    line = string.gsub(line, "^%s*(.-)%s*$", "%1")
    frame = readfile(line)
-   filename = line:split('/')[9]
+   filename = line:split('/')
+   filename = filename[#filename]
    filename = filename:split('%.')[1]
-   writefile(arg[3]..filename,frame)
+   writefile(arg[4]..filename,frame)
 end

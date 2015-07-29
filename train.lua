@@ -1,4 +1,3 @@
-----------------------------------------------------------------------
 -- CUDA?
 if opt.type == 'cuda' then
    model:cuda()
@@ -52,7 +51,7 @@ end
 ----------------------------------------------------------------------
 print '==> defining training procedure'
 
-function train()
+function train(shuffleddata)
 
    -- epoch tracker
    epoch = epoch or 1
@@ -72,66 +71,65 @@ function train()
    for t = 1,trainData:size(),opt.batchSize do
       -- disp progress
       xlua.progress(t, trainData:size())
-
       -- create mini batch
-      local inputs = {}
-      local targets = {}
-      -- local inputs = trainData.data:narrow(1, t, opt.batchSize)
-      -- local targets = trainData.labels:narrow(1, t, opt.batchSize)
+      -- local inputs = {}
+      -- local targets = {}
+      -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
+      -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
       local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
       local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
-         local input = trainData.data[shuffle[i]]
-         local target = trainData.labels[shuffle[i]]
+         local input = trainData.data[shuffleddata[i]]
+         local target = trainData.labels[shuffleddata[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         -- table.insert(inputs, input)
-         -- table.insert(targets, target)
          inputs[i-t+1] = input
          targets[i-t+1] = target
       end
       targets = targets:squeeze(2)
-      -- create closure to evaluate f(X) and df/dX
+      
       local feval = function(x)
-         -- get new parameters
-         if x ~= parameters then
-           parameters:copy(x)
-         end
+                        -- get new parameters
+                        if x ~= parameters then
+                           parameters:copy(x)
+                        end
 
-         -- reset gradients
-         gradParameters:zero()
+                        -- reset gradients
+                        gradParameters:zero()
 
-         -- f is the average of all criterions
-         local f = 0
+                        -- f is the average of all criterions
+                        local f = 0
+                        local outputs = model:forward(inputs)
+                        local err = criterion:forward(outputs, targets)
+                        f = f + err
 
-         -- evaluate function for complete mini batch
-
-         local outputs = model:forward(inputs)
-         -- print(targets[1][1])
-         local err = criterion:forward(outputs, targets)
-         f = f + err
-         -- -- estimate df/dW
-         local df_do = criterion:backward(outputs, targets)
-         model:backward(inputs, df_do)
-         -- -- update confusion
-         confusion:batchAdd(outputs, targets)
-	
-	 for i=1,inputs:size(1) do
-            if (targets[i]~=outputs[i]) then
-  	       wrong = wrong+1
-	    else
-               correct = correct+1
-            end
-         end
-
-         -- normalize gradients and f(X)
-         gradParameters:div(inputs:size(1))
-         f = f/inputs:size(1)
-
-         -- return f and df/dX
-         return f,gradParameters
-         end
+                        -- estimate df/dW
+                        local df_do = criterion:backward(outputs, targets)
+                        model:backward(inputs, df_do)
+                        -- update confusion
+                        confusion:batchAdd(outputs, targets)
+                        -- for i=1,inputs:size(1) do
+                        --    local maxindex,maxpred
+                        --    maxindex = 0 maxpred=0
+                        --    for j=1,outputs:size(2) do
+                        --       if outputs[i][j]>maxpred then
+                        --          maxpred = outputs[i][j]
+                        --          maxindex = j
+                        --       end
+                        --    end
+                        --    if (maxindex==targets[i]) then
+                        --       correct = correct+1
+                        --    else
+                        --       wrong = wrong+1
+                        --    end
+                        -- end
+                        -- normalize gradients and f(X)
+                        gradParameters:div(inputs:size(1))
+                        f = f/inputs:size(1)
+                        -- return f and df/dX
+                        return f,gradParameters
+                    end
 
       -- optimize on current mini-batch
       if optimMethod == optim.asgd then
@@ -148,12 +146,11 @@ function train()
 
    -- print confusion matrix
    -- print(confusion)
-   -- confusion:__tostring__()
    confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
-   print('correct and wrong' .. correct ..' ' .. wrong)
+   -- print("correct and wrong "..correct..' '..wrong)
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
