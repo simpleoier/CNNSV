@@ -55,7 +55,7 @@ print '==> define parameters'
 
 -- trsize = 181
 -- tesize = 181
-noutputs = 2910
+noutputs = 873
 -- input dimensions
 --nfeats = 3
 --width = 32
@@ -71,7 +71,7 @@ nstates = {1024,1024,1024}
 -- classes
 classes = {}
 for i=1,noutputs do
-  classes[#classes+1] = ''..i
+  classes[i] = ''..i
 end
 
 sum = 0

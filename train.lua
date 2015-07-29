@@ -88,6 +88,7 @@ function train(shuffleddata)
          targets[i-t+1] = target
       end
       targets = targets:squeeze(2)
+      -- print(targets)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
@@ -101,11 +102,6 @@ function train(shuffleddata)
                         -- f is the average of all criterions
                         local f = 0
                         local outputs = model:forward(inputs)
-                        -- for k=1, outputs:size(1) do
-                        --    -- print(k,targets[k],outputs[k][targets[k]])
-                        --    print(k,targets[k],outputs[k][1])
-                        -- end
-                        -- print(targets:size())
                         local err = criterion:forward(outputs, targets)
                         f = f + err
 
@@ -114,7 +110,21 @@ function train(shuffleddata)
                         model:backward(inputs, df_do)
                         -- update confusion
                         confusion:batchAdd(outputs, targets)
-
+                        -- for i=1,inputs:size(1) do
+                        --    local maxindex,maxpred
+                        --    maxindex = 0 maxpred=0
+                        --    for j=1,outputs:size(2) do
+                        --       if outputs[i][j]>maxpred then
+                        --          maxpred = outputs[i][j]
+                        --          maxindex = j
+                        --       end
+                        --    end
+                        --    if (maxindex==targets[i]) then
+                        --       correct = correct+1
+                        --    else
+                        --       wrong = wrong+1
+                        --    end
+                        -- end
                         -- normalize gradients and f(X)
                         gradParameters:div(inputs:size(1))
                         f = f/inputs:size(1)
@@ -141,6 +151,7 @@ function train(shuffleddata)
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+   -- print("correct and wrong "..correct..' '..wrong)
 
    -- update logger/plot
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
