@@ -18,6 +18,7 @@ elseif io.open(opt.scpfile,"rb") == nil then
     error(string.format("Given scp file %s cannot be found!",opt.scpfile))
     return
 end
+
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
 while (true) do

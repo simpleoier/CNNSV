@@ -1,8 +1,5 @@
 print '==> defining test procedure'
 
--- This matrix records the current confusion across classes
-confusion = optim.ConfusionMatrix(classes)
-
 -- test function
 function test()
    -- local vars
@@ -19,20 +16,12 @@ function test()
 
    -- test over test data
    print('==> testing on test set:')
-   for t = 1,testData:size() do
-      -- disp progress
-      xlua.progress(t, testData:size())
-
-      -- get new sample
-      local input = testData.data[t]
-      if opt.type == 'double' then input = input:double()
-      elseif opt.type == 'cuda' then input = input:cuda() end
-      local target = testData.labels[t]
-
-      -- test sample
-      local pred = model:forward(input)
-      confusion:add(pred, target)
-   end
+   local inputs = testData.data
+   local targets = testData.labels
+   local preds = model:forward(inputs)
+   print(targets)
+   confusion:batchAdd(preds, targets)
+   -- end
 
    -- timing
    time = sys.clock() - time
@@ -41,7 +30,8 @@ function test()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   -- confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')

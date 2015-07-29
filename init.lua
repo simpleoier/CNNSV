@@ -74,10 +74,8 @@ width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/pools
 -- classes
 classes = {}
 for i=1,noutputs do
-  classes[#classes+1] = ''..i
+  classes[i] = ''..i
 end
-
-sum = 0
 
 -- This matrix records the current confusion across classes
 confusion = optim.ConfusionMatrix(classes)
