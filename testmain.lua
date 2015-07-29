@@ -9,10 +9,6 @@ require 'test'
 ----------------------------------------------------------------------
 print(" ==> testing")
 
--- remove the last two layer
--- model:remove()
--- model:remove()
--- print(model)
 
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
