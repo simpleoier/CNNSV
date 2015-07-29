@@ -88,7 +88,7 @@ function train(shuffleddata)
          targets[i-t+1] = target
       end
       targets = targets:squeeze(2)
-      
+
       local feval = function(x)
                         -- get new parameters
                         if x ~= parameters then
