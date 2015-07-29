@@ -72,22 +72,17 @@ function train(shuffleddata)
       -- disp progress
       xlua.progress(t, trainData:size())
       -- create mini batch
-      -- local inputs = {}
-      -- local targets = {}
-      -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
-      -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
-      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),nfeats,height,width)
-      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      local inputs = {}
+      local targets = {}
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffleddata[i]]
          local target = trainData.labels[shuffleddata[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         inputs[i-t+1] = input
-         targets[i-t+1] = target
+         table.insert(inputs, input)
+         table.insert(targets, target)
       end
-      targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
@@ -100,9 +95,10 @@ function train(shuffleddata)
 
                         -- f is the average of all criterions
                         local f = 0
-                        for i = 1,inputs:size(1) do
+                        for i = 1,#inputs do
                           -- estimate f
                           local output = model:forward(inputs[i])
+                          -- print(output:size())
                           local err = criterion:forward(output, targets[i])
                           f = f + err
 
@@ -115,8 +111,8 @@ function train(shuffleddata)
                        end
 
                         -- normalize gradients and f(X)
-                        gradParameters:div(inputs:size(1))
-                        f = f/inputs:size(1)
+                        gradParameters:div(#inputs)
+                        f = f/#inputs
                         -- return f and df/dX
                         return f,gradParameters
                     end

@@ -64,9 +64,13 @@ ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {64,128,1024,1024,1024,1024}
-filtsize = 9
+nstates = {64,64,256,512}
+filtsizew = 11
+filtsizeh = 3
 poolsize = 2
+-- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
+height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
+width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
 -- classes
 classes = {}
 for i=1,noutputs do
