@@ -20,7 +20,7 @@ if not (opt) then
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
-    cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
+    cmd:option('-model', 'convnet', 'type of model to construct: linear | mlp | convnet | deepneunet')
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
     -- loss:
@@ -55,19 +55,18 @@ print '==> define parameters'
 
 -- trsize = 181
 -- tesize = 181
-noutputs = 2910
+noutputs = 873
 -- input dimensions
---nfeats = 3
---width = 32
---height = 32
---ninputs = nfeats*width*height
-ninputs = 1320
+nfeats = 3
+width = 40 
+height = 11
+ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {1024,1024,1024}
---filtsize = 5
---poolsize = 2
+nstates = {64,128,1024,1024,1024,1024}
+filtsize = 9
+poolsize = 2
 -- classes
 classes = {}
 for i=1,noutputs do

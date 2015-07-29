@@ -52,24 +52,31 @@ if (model==nil) then
 
          if opt.type == 'cuda' then
             -- a typical modern convolution network (conv+relu+pool)
+            local curState=1
             model = nn.Sequential()
 
             -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
-            model:add(nn.SpatialConvolutionMM(nfeats, nstates[1], filtsize, filtsize))
+            model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsize, filtsize))
+            curState = curState+1
             model:add(nn.ReLU())
             model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
             -- stage 2 : filter bank -> squashing -> L2 pooling -> normalization
-            model:add(nn.SpatialConvolutionMM(nstates[1], nstates[2], filtsize, filtsize))
-            model:add(nn.ReLU())
-            model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
+            -- model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsize, filtsize))
+            -- curState = curState+1
+            -- model:add(nn.ReLU())
+            -- model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
             -- stage 3 : standard 2-layer neural network
-            model:add(nn.View(nstates[2]*filtsize*filtsize))
-            model:add(nn.Dropout(0.5))
-            model:add(nn.Linear(nstates[2]*filtsize*filtsize, nstates[3]))
-            model:add(nn.ReLU())
-            model:add(nn.Linear(nstates[3], noutputs))
+            -- model:add(nn.View(nstates[2]*filtsize*filtsize))
+            -- model:add(nn.Dropout(0.5))
+            for i = curState,#nstates-1 do
+               model:add(nn.Linear(nstates[i], nstates[i+1]))
+               model:add(nn.PReLU())
+               -- model:add(nn.BatchNormalization(nstates[i+1]))
+            end
+            model:add(nn.Linear(nstates[#nstates], noutputs))
+            model:add(nn.LogSoftMax())
 
          else
             -- a typical convolutional network, with locally-normalized hidden
@@ -82,25 +89,31 @@ if (model==nil) then
             -- the paper, and low-level (first layer) features are not fed to
             -- the classifier.
 
+            local curState=1
             model = nn.Sequential()
 
             -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
-            model:add(nn.SpatialConvolutionMM(nfeats, nstates[1], filtsize, filtsize))
+            model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsize, filtsize))
+            curState = curState+1
             model:add(nn.Tanh())
-            model:add(nn.SpatialLPPooling(nstates[1],2,poolsize,poolsize,poolsize,poolsize))
-            model:add(nn.SpatialSubtractiveNormalization(nstates[1], normkernel))
+            model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
             -- stage 2 : filter bank -> squashing -> L2 pooling -> normalization
-            model:add(nn.SpatialConvolutionMM(nstates[1], nstates[2], filtsize, filtsize))
+            model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsize, filtsize))
+            curState = curState+1
             model:add(nn.Tanh())
-            model:add(nn.SpatialLPPooling(nstates[2],2,poolsize,poolsize,poolsize,poolsize))
-            model:add(nn.SpatialSubtractiveNormalization(nstates[2], normkernel))
+            model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
 
             -- stage 3 : standard 2-layer neural network
-            model:add(nn.Reshape(nstates[2]*filtsize*filtsize))
-            model:add(nn.Linear(nstates[2]*filtsize*filtsize, nstates[3]))
-            model:add(nn.Tanh())
-            model:add(nn.Linear(nstates[3], noutputs))
+            -- model:add(nn.View(nstates[2]*filtsize*filtsize))
+            -- model:add(nn.Dropout(0.5))
+            for i = curState,#nstates-1 do
+               model:add(nn.Linear(nstates[i], nstates[i+1]))
+               model:add(nn.PReLU())
+               model:add(nn.BatchNormalization(nstates[i+1]))
+            end
+            model:add(nn.Linear(nstates[#nstates], noutputs))
+            model:add(nn.LogSoftMax())
          end
       elseif opt.model == 'deepneunet' then
          model = nn.Sequential()

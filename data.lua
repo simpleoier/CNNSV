@@ -29,8 +29,12 @@ function parsefbank(lines, data, labels)
       --    sum = sum+1
       -- end
 
-      for j = 2,#tb do
-         data[i][j-1] = tb[j];
+      for h = 1, height do
+         for m = 1, nfeats do
+            for w = 1, width do
+               data[i][m][h][w] = tb[1+w+(m-1)*width+(h-1)*nfeats*width]
+            end
+         end
       end
    end
 end
@@ -43,14 +47,14 @@ function readData(listfile)
       local line = listfile:read()
       if (line~=nil) then
          local fbankfilename = line
-	 print("Reading fbank from "..fbankfilename)
+         print("Reading fbank from "..fbankfilename)
          readfbank(fbankfilename, lines)
       else
          break
       end
    end
 
-   local tdata = torch.Tensor(#lines, ninputs)
+   local tdata = torch.Tensor(#lines, nfeats, height, width)
    local tlabels = torch.Tensor(#lines,1)
 
    parsefbank(lines, tdata, tlabels)
@@ -62,3 +66,9 @@ function readData(listfile)
    }
    return Data
 end
+
+-- dofile 'init.lua'
+-- listfile = io.open(opt.scpfile,'r')
+-- tryData = readData(listfile)
+-- listfile:close()
+-- print(tryData.data)
