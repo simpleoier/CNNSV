@@ -17,7 +17,7 @@ if (opt.modelPara~='') then
          model:add(nn.Sigmoid())
       elseif (activations[i]=='softmax') then
          model:add(nn.SoftMax())
-      elseif (activations[i]=='relu')
+      elseif (activations[i]=='relu') then
          model:add(nn.ReLU())
       end
    end

@@ -9,10 +9,6 @@ require 'test'
 ----------------------------------------------------------------------
 print(" ==> testing")
 
-<<<<<<< HEAD
-=======
--- remove the last two layer
-
 if not opt.scpfile then
     error("Please specify a file containing the data with -scpfile")
     return
@@ -20,7 +16,6 @@ elseif io.open(opt.scpfile,"rb") == nil then
     error(string.format("Given scp file %s cannot be found!",opt.scpfile))
     return
 end
->>>>>>> 79b7d8ebb32cb1e61f578ab72d7435442dff117b
 
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
