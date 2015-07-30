@@ -9,6 +9,13 @@ require 'test'
 ----------------------------------------------------------------------
 print(" ==> testing")
 
+if not opt.scpfile then
+    error("Please specify a file containing the data with -scpfile")
+    return
+elseif io.open(opt.scpfile,"rb") == nil then
+    error(string.format("Given scp file %s cannot be found!",opt.scpfile))
+    return
+end
 
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
