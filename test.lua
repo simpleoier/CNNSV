@@ -1,3 +1,5 @@
+require("htklua/htkwrite")
+
 print '==> defining test procedure'
 
 -- This matrix records the current confusion across classes
@@ -17,23 +19,30 @@ function test()
    -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
    model:evaluate()
 
+   local inputs = testData.data
+   local targets = testData.labels
+
+   if opt.type == 'double' then inputs = inputs:double()
+   elseif opt.type == 'cuda' then inputs = inputs:cuda() end
+
    -- test over test data
-   print('==> testing on test set:')
-   for t = 1,testData:size() do
-      -- disp progress
-      xlua.progress(t, testData:size())
+   print('==> testing on test set')
 
-      -- get new sample
-      local input = testData.data[t]
-      if opt.type == 'double' then input = input:double()
-      elseif opt.type == 'cuda' then input = input:cuda() end
-      local target = testData.labels[t]
+   local pred = model:forward(inputs)
+   local lastlayer = #model.modules
+   -- Take the output of the layer before the last one
+   local botneckout= model.modules[lastlayer-2].output
+   local outputpath = paths.concat(opt.save,"features")
+   os.execute('mkdir -p ' .. outputpath)
+   print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
+   local botnecktable = torch.totable(botneckout)
 
-      -- test sample
-      local pred = model:forward(input)
-      confusion:add(pred, target)
+   for k,v in pairs(botnecktable) do
+      local outputfeature = paths.concat(outputpath,k..'.feat')
+      writehtk(outputfeature,1,100000,#botnecktable[1],"USER",v)
    end
 
+   confusion:batchAdd(pred, targets)
    -- timing
    time = sys.clock() - time
    time = time / testData:size()
@@ -41,7 +50,7 @@ function test()
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:__tostring__()
+   confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
    print('global correct: ' .. (confusion.totalValid*100) .. '%')
@@ -59,6 +68,6 @@ function test()
       parameters:copy(cachedparams)
    end
 
-   -- next iteration:
+
    confusion:zero()
 end
