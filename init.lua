@@ -13,10 +13,10 @@ if not (opt) then
     cmd:text('Options:')
     -- filelist:
     cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
-    cmd:option('-filenum', 5, 'max nb of fbank file each time')
+    cmd:option('-filenum', 20, 'max nb of fbank file each time')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-    cmd:option('-threads', 2, 'number of threads')
+    cmd:option('-threads', 4, 'number of threads')
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
@@ -26,13 +26,13 @@ if not (opt) then
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
-    cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
+    cmd:option('-save', '../DNNresults', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
-    cmd:option('-learningRate', 1e-3, 'learning rate at t=0')
+    cmd:option('-learningRate', 1, 'learning rate at t=0')
     cmd:option('-batchSize', 10, 'mini-batch size (1 = pure stochastic)')
     cmd:option('-weightDecay', 0, 'weight decay (SGD only)')
-    cmd:option('-momentum', 0, 'momentum (SGD only)')
+    cmd:option('-momentum', 0.7, 'momentum (SGD only)')
     cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
     cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
