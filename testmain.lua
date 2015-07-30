@@ -9,8 +9,6 @@ require 'test'
 ----------------------------------------------------------------------
 print(" ==> testing")
 
--- remove the last two layer
-
 if not opt.scpfile then
     error("Please specify a file containing the data with -scpfile")
     return

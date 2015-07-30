@@ -74,8 +74,6 @@ for i=1,noutputs do
   classes[i] = ''..i
 end
 
-sum = 0
-
 -- This matrix records the current confusion across classes
 confusion = optim.ConfusionMatrix(classes)
 

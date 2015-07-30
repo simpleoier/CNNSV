@@ -2,9 +2,6 @@ require("htklua/htkwrite")
 
 print '==> defining test procedure'
 
--- This matrix records the current confusion across classes
-confusion = optim.ConfusionMatrix(classes)
-
 -- test function
 function test()
    -- local vars
@@ -50,6 +47,7 @@ function test()
 
    -- print confusion matrix
    -- print(confusion)
+   -- confusion:__tostring__()
    confusion:updateValids()
    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
