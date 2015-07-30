@@ -1,0 +1,43 @@
+A small script written in c++11 to write a htk file in binary.
+
+Installation:
+The precompiled library can already be used, just make sure you always copy htkwrite.so with your .lua file and that the library is in the same
+directory as the to be executed .lua file.
+
+
+Compiling ( if necessary ):
+
+Just run:
+make
+
+Make sure your compiler is c++11 compatible ( g++4.7 or above ). Otherwise change the flag from std=c++11 to std=c++0x if you use g++4.6.
+
+Testing :
+
+run:
+make test && ./testhtkwrite
+
+
+To run it using Lua ( example ):
+
+require ("htkwrite")
+arr = {1,2,3,4,5}
+writehtk("feature.plp",3,100000,5,"PLP",arr)
+
+which writes into the file feature.plp the feature, with 3 samples, a sampleperiod of 100000 ( 10ns) , 5 dimensions and the PLP type is used.
+Datawise we use the table arr.
+
+The only unclear parameter is the feature type. It can be one of the following:
+WAVEFORM
+LPC
+LPREFC
+LPCEPSTRA
+LPDELCEP
+IREFC
+MFCC
+FBANK
+MELSPEC
+USER
+DISCRETE
+PLP
+
