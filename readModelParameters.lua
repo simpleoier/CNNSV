@@ -1,4 +1,4 @@
-function parseLayer(lines)
+function parseLayer(lines,layernum)
    -- print("parsing lines")
    local cur_line = 1
    local ninput,noutput,k
@@ -14,7 +14,7 @@ function parseLayer(lines)
       end
       cur_line = cur_line + 1
    else
-      print("ERROR: try to find the number of input and output layer but failed")
+      print("ERROR: try to find the number of input and output layer but failed with line "..cur_line..' of total '..#lines..' in layer '..layernum)
       os.exit()
    end
    -- print(ninput,noutput)
@@ -27,29 +27,32 @@ function parseLayer(lines)
          weight[i][v] = tonumber(k[v])
       end
       if (#weight[i]<ninput) then
-         print("ERROR: number of weight["..i.."] is less than required "..ninput)
+         print("ERROR: number of weight["..i.."] is less than required "..ninput..' in layer '..layernum)
          os.exit()
       end
       cur_line = cur_line + 1
    end
    -- bias
    if (cur_line>=#lines) then
-      print("ERROR: can not find any bias")
+      print("ERROR: can not find any bias in layer "..layernum)
       os.exit()
    end
    local bias = {}
    local nbias
    k = lines[cur_line]:split(' ')
-   cur_line = cur_line + 1
    for v = 1,#k do
       if (v==2) then
          nbias = tonumber(k[v])
-      elseif (v>2) and (k[v]~=nil) then
-         bias[#bias+1] = tonumber(k[v])
       end
    end
+   cur_line = cur_line + 1
+   k = lines[cur_line]:split(' ')
+   for v = 1,#k do
+      bias[#bias+1] = tonumber(k[v])
+   end
+   cur_line = cur_line+1
    if (nbias<noutput) then
-      print("ERROR: nbias is less than output layer nodes")
+      print("ERROR: nbias is less than output layer nodes line "..cur_line..' of total '..#lines..' in layer '..layernum)
       os.exit()
    end
    -- activation
@@ -58,7 +61,7 @@ function parseLayer(lines)
       k = lines[cur_line]:split(' ')
       activation = string.sub(k[1],2,#k[1]-1)
    else
-      print("Warning: cannot find the activation layer")
+      print("Warning: cannot find the activation layer in line "..cur_line..' of total '..#lines..' in layer '..layernum)
    end
    -- print(#weight,#bias,activation)
    return weight, bias, activation
@@ -68,7 +71,8 @@ function readModelPara(filename)
    local weights,bias,activation
    weights = {} bias = {} activation = {}
    local fin = io.open(filename,'r')
-   local nline,lines,line
+   local nline,lines,line,layernum
+   layernum = 1
    line = fin:read()
    while (line~=nil) do
       lines = {}
@@ -76,13 +80,16 @@ function readModelPara(filename)
          line = string.sub(line,19)
          s,e = string.find(line, "%S*")
          nline = tonumber(string.sub(line,s,e))
+      else
+         print("Cannot find <biasedlinearity> in layer "..layernumand.." the line is "..string.sub(line,1,40).."...")
       end
-      for i=1,nline+3 do
+      for i=1,nline+4 do
          line = fin:read()
          lines[#lines+1] = line
       end
-      weights[#weights+1],bias[#bias+1],activation[#activation+1] = parseLayer(lines)
+      weights[#weights+1],bias[#bias+1],activation[#activation+1] = parseLayer(lines,layernum)
       line = fin:read()
+      layernum = layernum+1
    end
    fin:close()
    if (#weights~=#bias) then

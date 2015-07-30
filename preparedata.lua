@@ -105,7 +105,7 @@ function writefile(outputfile, frame,extframe)
    chunk = outputfile:split('/')
    chunk = chunk[#chunk]
    chunk = chunk:split('_')
-   lab = chunk[1]..'_'..chunk[3]
+   lab = chunk[1]..'_'..chunk[2]
    --We extend the frame window left and right by extframe frames
    for i=1,#frame-(2*extframe) do
       fout:write(label[lab]..' ')

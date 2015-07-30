@@ -13,10 +13,16 @@ if (opt.modelPara~='') then
       end
       model:get(2*i-1).bias = torch.Tensor(bias[i])
       model:get(2*i-1).weight = torch.Tensor(weights[i])
-      model:add(nn.ReLU())
+      if (activations[i]=='sigmoid') then
+         model:add(nn.Sigmoid())
+      elseif (activations[i]=='softmax') then
+         model:add(nn.SoftMax())
+      elseif (activations[i]=='relu')
+         model:add(nn.ReLU())
+      end
    end
-   model:add(nn.Linear(#weights[#weights],noutputs))
-   model:add(nn.LogSoftMax())
+   -- model:add(nn.Linear(#weights[#weights],noutputs))
+   -- model:add(nn.LogSoftMax())
 end
 if (model==nil) then
    print '==> load model'
