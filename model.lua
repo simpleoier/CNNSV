@@ -34,6 +34,17 @@ if (model==nil) then
       print ('find model '..filename)
       model:close()
       model = torch.load(filename)
+      local curhid
+      curhid = (model:size()-4)/3+1  -- 4 is the number of input and output layers (Lin, Re, Lin, LogSM)
+      if (opt.model=='deepneunet' and curhid<opt.hidlaynb) then 
+         for i=1, opt.hidlaynb-curhid do
+            model:insert(nn.Linear(nstates[curhid],nstates[curhid+1]),model:size()-1)
+            model:insert(nn.PReLU(),model:size()-1)
+            model:insert(nn.BatchNormalization(nstates[curhid+1]),model:size()-1)
+            curhid = curhid+1
+         end
+      end
+      print(model)
    else
       print ('==> model in '..filename..' is not found')
       print '==> construct model'
@@ -123,16 +134,20 @@ if (model==nil) then
             model:add(nn.LogSoftMax())
          end
       elseif opt.model == 'deepneunet' then
+         local nhidla
+         nhidla = math.min(#nstates,opt.hidlaynb)
          model = nn.Sequential()
          model:add(nn.Linear(ninputs,nstates[1]))
          model:add(nn.PReLU())
-         for i = 1,#nstates-1 do
+         for i = 1,nhidla-1 do
             model:add(nn.Linear(nstates[i], nstates[i+1]))
             model:add(nn.PReLU())
             model:add(nn.BatchNormalization(nstates[i+1]))
          end
-         model:add(nn.Linear(nstates[#nstates], noutputs))
+         model:add(nn.Linear(nstates[nhidla], noutputs))
          model:add(nn.LogSoftMax())
+
+         print(model)
       else
 
          error('unknown -model')

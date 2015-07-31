@@ -7,7 +7,7 @@ require 'loss'
 -- require 'train'
 require 'test'
 ----------------------------------------------------------------------
-print(" ==> testing")
+print("==> testing")
 
 if not opt.scpfile then
     error("Please specify a file containing the data with -scpfile")

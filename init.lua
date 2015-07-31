@@ -24,6 +24,7 @@ if not (opt) then
     cmd:option('-model', 'convnet', 'type of model to construct: linear | mlp | convnet | deepneunet')
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
+    cmd:option('-hidlaynb', 0, 'nb of hidden layers')
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
@@ -72,6 +73,7 @@ poolsize = 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
+
 -- classes
 classes = {}
 for i=1,noutputs do

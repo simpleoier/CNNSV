@@ -26,7 +26,7 @@ function test()
    local lastlayer = #model.modules
    -- Take the output of the layer before the last one
    local botneckout= model.modules[lastlayer-2].output
-   local outputpath = paths.concat(opt.save,"features")
+   local outputpath = paths.concat(opt.save,"features/")
    os.execute('mkdir -p ' .. outputpath)
    print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
    local botnecktable = torch.totable(botneckout)
