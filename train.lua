@@ -96,6 +96,7 @@ function train(shuffleddata)
 
                         -- f is the average of all criterions
                         local f = 0
+
                         for i = 1,#inputs do
                           -- estimate f
                           local output = model:forward(inputs[i])
@@ -108,17 +109,17 @@ function train(shuffleddata)
                           model:backward(inputs[i], df_do)
 
                           -- update confusion
-                          confusion:add(output, targets[i])
+                          confusionBatch:batchAdd(outputs, targets)
+                          confusion:batchAdd(outputs, targets)
 
-                          local maxind,maxpred
-                          maxind = 1 maxpred = output[1]
-                          for j=2,output:size(1) do
-                              if (output[j]>maxpred) then
-                                 maxpred = output[j]
-                                 maxind = j
-                              end
-                          end
-                          
+                          -- local maxind,maxpred
+                          -- maxind = 1 maxpred = output[1]
+                          -- for j=2,output:size(1) do
+                          --     if (output[j]>maxpred) then
+                          --        maxpred = output[j]
+                          --        maxind = j
+                          --     end
+                          -- end
                           -- print(maxind,targets[i],maxind==targets[i])
                           -- if (maxind==targets[i]) then
                           --    correct = correct+1
@@ -149,14 +150,14 @@ function train(shuffleddata)
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:updateValids()
-   print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-   print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-   print('global correct: ' .. (confusion.totalValid*100) .. '%')
-   -- print("correct and wrong "..correct..' '..wrong)
+   confusionBatch:updateValids()
+   print('average row correct: ' .. (confusionBatch.averageValid*100) .. '%')
+   print('average rowUcol correct (VOC measure): ' .. (confusionBatch.averageUnionValid*100) .. '%')
+   print('global correct: ' .. (confusionBatch.totalValid*100) .. '%')
+   print("correct and wrong "..correct..' '..wrong)
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   trainLogger:add{['% mean class accuracy (train set)'] = confusionBatch.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
@@ -169,6 +170,7 @@ function train(shuffleddata)
    torch.save(filename, model)
 
    -- next epoch
-   confusion:zero()
+   confusionBatch:zero()
+   correct = 0 wrong = 0
    epoch = epoch + 1
 end

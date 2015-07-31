@@ -66,6 +66,7 @@ ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
+<<<<<<< HEAD
 nstates = {64,64,256,512}
 filtsizew = 11
 filtsizeh = 3
@@ -73,7 +74,6 @@ poolsize = 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
-
 -- classes
 classes = {}
 for i=1,noutputs do
@@ -81,6 +81,7 @@ for i=1,noutputs do
 end
 
 -- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
 confusion = optim.ConfusionMatrix(classes)
 
 -- Log results to files

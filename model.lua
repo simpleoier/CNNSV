@@ -35,16 +35,21 @@ if (model==nil) then
       model:close()
       model = torch.load(filename)
       local curhid
-      curhid = (model:size()-4)/3+1  -- 4 is the number of input and output layers (Lin, Re, Lin, LogSM)
-      if (opt.model=='deepneunet' and curhid<opt.hidlaynb) then 
+      curhid = (model:size()-5)/3+1  -- 5 is the number of input and output layers (Lin, Re, Lin, LogSM)
+      if (opt.model=='deepneunet' and curhid<opt.hidlaynb and opt.hidlaynb~=0 and opt.hidlaynb<=#nstates) then
+         table.remove(model.modules, #model.modules)
+         table.remove(model.modules, #model.modules)
          for i=1, opt.hidlaynb-curhid do
-            model:insert(nn.Linear(nstates[curhid],nstates[curhid+1]),model:size()-1)
-            model:insert(nn.PReLU(),model:size()-1)
-            model:insert(nn.BatchNormalization(nstates[curhid+1]),model:size()-1)
+            model:add(nn.Linear(nstates[curhid],nstates[curhid+1]))
+            model:add(nn.PReLU(),model:size())
+            model:add(nn.BatchNormalization(nstates[curhid+1]))
             curhid = curhid+1
          end
+         model:add(nn.Linear(nstates[curhid],noutputs))
+         model:add(nn.LogSoftMax())
+      elseif (opt.hidlaynb>#nstates) then
+         print("Warning: too many layers to build, not enough nstates")
       end
-      print(model)
    else
       print ('==> model in '..filename..' is not found')
       print '==> construct model'
@@ -135,10 +140,14 @@ if (model==nil) then
          end
       elseif opt.model == 'deepneunet' then
          local nhidla
-         nhidla = math.min(#nstates,opt.hidlaynb)
+         nhidla = #nstates
+         if (opt.hidlaynb~=0) then
+            nhidla = math.min(nhidla,opt.hidlaynb)
+         end
          model = nn.Sequential()
          model:add(nn.Linear(ninputs,nstates[1]))
          model:add(nn.PReLU())
+         model:add(nn.BatchNormalization(nstates[1]))
          for i = 1,nhidla-1 do
             model:add(nn.Linear(nstates[i], nstates[i+1]))
             model:add(nn.PReLU())
@@ -146,8 +155,6 @@ if (model==nil) then
          end
          model:add(nn.Linear(nstates[nhidla], noutputs))
          model:add(nn.LogSoftMax())
-
-         print(model)
       else
 
          error('unknown -model')

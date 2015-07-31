@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 ../DNNsrc/data/f008_06_004
 ../DNNsrc/data/m031_09_024
 ../DNNsrc/data/m037_01_021
 ../DNNsrc/data/f025_04_025
 ../DNNsrc/data/f030_03_017
+=======
+data/f001_01_001
+data/f001_01_001.old
+data/f008_06_004
+data/f025_04_025
+data/f030_03_017
+data/m031_09_024
+data/m031_09_024.old
+data/m037_01_021
+data/m037_01_021.old
+>>>>>>> dcd0c31702914b4835a5198367178e448635c1c2
