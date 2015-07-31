@@ -23,6 +23,7 @@ if not (opt) then
     cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
+    cmd:option('-hidlaynb', 0, 'nb of hidden layers')
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
@@ -65,7 +66,7 @@ ninputs = 1320
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {1024,1024,1024}
+nstates = {1024,1024,1024,1024}
 --filtsize = 5
 --poolsize = 2
 -- classes
