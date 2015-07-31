@@ -1,6 +1,7 @@
 require 'torch'   -- torch
 require 'os'   --
 require 'nn'      -- provides a normalization operator
+require 'cunn'
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
 require 'readModelParameters'
@@ -29,7 +30,7 @@ if not (opt) then
     cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
-    cmd:option('-learningRate', 1, 'learning rate at t=0')
+    cmd:option('-learningRate', 2, 'learning rate at t=0')
     cmd:option('-batchSize', 10, 'mini-batch size (1 = pure stochastic)')
     cmd:option('-weightDecay', 0, 'weight decay (SGD only)')
     cmd:option('-momentum', 0.7, 'momentum (SGD only)')
