@@ -13,7 +13,7 @@ if not (opt) then
     cmd:text('Options:')
     -- filelist:
     cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
-    cmd:option('-filenum', 5, 'max nb of fbank file each time')
+    cmd:option('-filenum', 10, 'max nb of fbank file each time')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 2, 'number of threads')
@@ -66,7 +66,7 @@ ninputs = 1320
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {1024,1024,1024,1024}
+nstates = {1024,1024,1024,20}
 --filtsize = 5
 --poolsize = 2
 -- classes
@@ -76,6 +76,7 @@ for i=1,noutputs do
 end
 
 -- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
 confusion = optim.ConfusionMatrix(classes)
 
 -- Log results to files

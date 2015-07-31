@@ -19,9 +19,6 @@ elseif io.open(opt.scpfile,"rb") == nil then
     return
 end
 
--- correct = 0
--- wrong = 0
-
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
 while (true) do
@@ -35,6 +32,11 @@ while (true) do
     collectgarbage()
 end
 listfile:close()
+
+confusion:updateValids()
+print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+print('global correct: ' .. (confusion.totalValid*100) .. '%')
 
 -- print(model:size())
 -- trainData = ReadData(listfile)
