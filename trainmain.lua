@@ -22,8 +22,8 @@ end
 -- wrong = 0
 local trainfbankfilelist = opt.scpfile
 local listfile = io.open(trainfbankfilelist, 'r')
-trainData = readData(listfile)
 while (true) do
+    trainData = readData(listfile)
     if (trainData:size()>0) then
         local shuffleddata = torch.randperm(trainData:size())
         train(shuffleddata)
