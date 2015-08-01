@@ -55,7 +55,7 @@ print '==> define parameters'
 
 -- trsize = 181
 -- tesize = 181
-noutputs = 873
+noutputs = 97
 -- input dimensions
 nfeats = 3
 width = 40 
@@ -64,7 +64,7 @@ ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {64,64,256,512}
+nstates = {256,512,1024}
 filtsizew = 11
 filtsizeh = 3
 poolsize = 2
