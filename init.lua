@@ -12,8 +12,10 @@ if not (opt) then
     cmd:text()
     cmd:text('Options:')
     -- filelist:
+    cmd:option('-featfile', '', 'name a file storing all the filenames of data')
+    cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
     cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
-    cmd:option('-filenum', 10, 'max nb of fbank file each time')
+    cmd:option('-filenum', 20, 'max nb of fbank file each time')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 2, 'number of threads')

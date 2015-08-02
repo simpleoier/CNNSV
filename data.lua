@@ -35,7 +35,34 @@ function parsefbank(lines, data, labels)
    end
 end
 
-function readData(listfile)
+function readDataFeat(featfile)
+   print('==> reading feature from '..opt.featfile)
+   local lines = {}
+   local curlinenum = 0
+   while (curlinenum<opt.maxrows) do
+      curlinenum = curlinenum+1
+      local line = featfile:read()
+      if (line~=nil) then
+         lines[#lines+1] = line
+      else
+         break
+      end
+   end
+
+   local tdata = torch.Tensor(#lines, ninputs)
+   local tlabels = torch.Tensor(#lines,1)
+
+   parsefbank(lines, tdata, tlabels)
+-- print(trlabels)
+   local Data = {
+      data = tdata,
+      labels = tlabels,
+      size = function() return #lines end
+   }
+   return Data
+end
+
+function readDataScp(listfile)
    local lines = {}
    local curlinenum = 0
    while (curlinenum<opt.filenum) do
