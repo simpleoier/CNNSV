@@ -23,6 +23,7 @@ if not (opt) then
     cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
+    cmd:option('-hidlaynb', 0, 'nb of hidden layers')
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
@@ -53,19 +54,19 @@ end
 torch.manualSeed(opt.seed)
 print '==> define parameters'
 
--- trsize = 181
--- tesize = 181
-noutputs = 873
+noutputs = 203
 -- input dimensions
---nfeats = 3
+nfeats = 3
+featDim = 40
+extFram = 5
 --width = 32
 --height = 32
 --ninputs = nfeats*width*height
-ninputs = 1320
+ninputs = nfeats*featDim*(2*extFram+1)
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {1024,1024,1024}
+nstates = {1024,1024,1024,1024}
 --filtsize = 5
 --poolsize = 2
 -- classes
@@ -75,6 +76,7 @@ for i=1,noutputs do
 end
 
 -- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
 confusion = optim.ConfusionMatrix(classes)
 
 -- Log results to files

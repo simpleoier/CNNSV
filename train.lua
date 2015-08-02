@@ -108,22 +108,28 @@ function train(shuffleddata)
                         local df_do = criterion:backward(outputs, targets)
                         model:backward(inputs, df_do)
                         -- update confusion
+                        confusionBatch:batchAdd(outputs, targets)
                         confusion:batchAdd(outputs, targets)
-                        -- for i=1,inputs:size(1) do
-                        --    local maxindex,maxpred
-                        --    maxindex = 0 maxpred=0
-                        --    for j=1,outputs:size(2) do
-                        --       if outputs[i][j]>maxpred then
-                        --          maxpred = outputs[i][j]
-                        --          maxindex = j
-                        --       end
-                        --    end
-                        --    if (maxindex==targets[i]) then
-                        --       correct = correct+1
-                        --    else
-                        --       wrong = wrong+1
-                        --    end
-                        -- end
+
+                        correct = correct or 0
+                        wrong = wrong or 0
+                        for i=1,inputs:size(1) do
+                           local maxindex,maxpred
+                           maxindex = 1
+                           maxpred = outputs[i][1]
+                           for j=2,outputs:size(2) do
+                              if outputs[i][j]>maxpred then
+                                 maxpred = outputs[i][j]
+                                 maxindex = j
+                              end
+                           end
+                           if (maxindex==targets[i]) then
+                              correct = correct+1
+                           else
+                              wrong = wrong+1
+                           end
+                        end
+
                         -- normalize gradients and f(X)
                         gradParameters:div(inputs:size(1))
                         f = f/inputs:size(1)
@@ -146,14 +152,14 @@ function train(shuffleddata)
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:updateValids()
-   print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-   print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-   print('global correct: ' .. (confusion.totalValid*100) .. '%')
-   -- print("correct and wrong "..correct..' '..wrong)
+   confusionBatch:updateValids()
+   print('average row correct: ' .. (confusionBatch.averageValid*100) .. '%')
+   print('average rowUcol correct (VOC measure): ' .. (confusionBatch.averageUnionValid*100) .. '%')
+   print('global correct: ' .. (confusionBatch.totalValid*100) .. '%')
+   print("correct and wrong "..correct..' '..wrong)
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   trainLogger:add{['% mean class accuracy (train set)'] = confusionBatch.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
@@ -166,6 +172,7 @@ function train(shuffleddata)
    torch.save(filename, model)
 
    -- next epoch
-   confusion:zero()
+   confusionBatch:zero()
+   correct = 0 wrong = 0
    epoch = epoch + 1
 end
