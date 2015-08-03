@@ -57,8 +57,12 @@ torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
 print '==> define parameters'
+-- hidden units (for creating new model or loading model from binary)
+nstates = {1024,1024,1024,1024}
 -- number of units in output layer, but meaningless in loading model from binary file
 noutputs = 873
+-- number of frame extension to each direction
+frameExt = 5
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
 nfeats = 3
 width = 40
@@ -66,7 +70,3 @@ height = 2*frameExt+1
 ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
--- hidden units (for creating new model or loading model from binary)
-nstates = {1024,1024,1024,1024}
---filtsize = 5
---poolsize = 2

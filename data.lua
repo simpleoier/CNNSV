@@ -1,5 +1,4 @@
 math.randomseed(os.time())
-frameExt = 5
 ----------------------------------------------------------------------
 function readfbank(filename, lines)
    local file = io.open(filename, 'r')
