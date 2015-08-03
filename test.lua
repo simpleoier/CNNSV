@@ -33,10 +33,10 @@ function test()
    -- test over test data
    print('==> testing on test set')
 
-   local pred = model:forward(inputs)
+   local preds = model:forward(inputs)
    local lastlayer = #model.modules
    -- Take the output of the layer before the last one
-   local botneckout= model.modules[lastlayer-2].output
+   local botneckout = model.modules[lastlayer-2].output
    local outputpath = paths.concat(opt.save,"features/")
    os.execute('mkdir -p ' .. outputpath)
    print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
@@ -47,7 +47,7 @@ function test()
       writehtk(outputfeature,1,100000,#botnecktable[1],"USER",v)
    end
 
-   confusion:batchAdd(pred, targets)
+   confusion:batchAdd(preds, targets)
    -- timing
    time = sys.clock() - time
    time = time / testData:size()
