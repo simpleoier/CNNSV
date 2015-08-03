@@ -1,0 +1,4 @@
+/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir
+/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk-static.dir
+/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth.dir
+/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir

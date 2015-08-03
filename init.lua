@@ -1,10 +1,10 @@
 require 'torch'   -- torch
 require 'os'   --
 require 'nn'      -- provides a normalization operator
-require 'cunn'
+-- require 'cunn'
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
-require 'readModelParameters'
+require "libhtktoth"
 
 if not (opt) then
     cmd = torch.CmdLine()
@@ -13,8 +13,11 @@ if not (opt) then
     cmd:text()
     cmd:text('Options:')
     -- filelist:
+    cmd:option('-featfile', '', 'name a file storing all the filenames of data')
+    cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
     cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
     cmd:option('-filenum', 20, 'max nb of fbank file each time')
+    cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 2, 'number of threads')
@@ -51,38 +54,26 @@ elseif opt.type == 'cuda' then
    require 'cunn'
    torch.setdefaulttensortype('torch.FloatTensor')
 end
---torch.setnumthreads(opt.threads)
+torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
-print '==> define parameters'
 
--- trsize = 181
--- tesize = 181
-noutputs = 873
--- input dimensions
-nfeats = 3
-width = 40 
-height = 11
-ninputs = nfeats*width*height
--- number of hidden units (for MLP only):
-nhiddens = ninputs / 2
--- hidden units
+print '==> define parameters'
+-- hidden units (for creating new model or loading model from binary)
 nstates = {128,256,1024,1024}
 filtsizew = 11
 filtsizeh = 3
 poolsize = 2
+-- number of units in output layer, but meaningless in loading model from binary file
+noutputs = 873
+-- number of frame extension to each direction
+frameExt = 5
+-- -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
+nfeats = 3
+width = 40 
+height = 2*frameExt+1
+ninputs = nfeats*width*height
+-- number of hidden units (for MLP only):
+nhiddens = ninputs / 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
--- classes
-classes = {}
-for i=1,noutputs do
-  classes[i] = ''..i
-end
-
--- This matrix records the current confusion across classes
-confusionBatch = optim.ConfusionMatrix(classes)
-confusion = optim.ConfusionMatrix(classes)
-
--- Log results to files
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))

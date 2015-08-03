@@ -1,9 +1,10 @@
 ----------------------------------------------------------------------
-
-local weights,bias,activations
+-- reading parameters from a txt file, usually trained by TNET or other tools
 if (opt.modelPara~='') then
+   local weights,bias,activations
    print("Reading parameters from "..opt.modelPara)
    weights,bias,activations = readModelPara(opt.modelPara)
+   ninputs = #weights[1][1]
    model = nn.Sequential()
    for i=1,#weights do
       if (i==1) then
@@ -21,9 +22,10 @@ if (opt.modelPara~='') then
          model:add(nn.ReLU())
       end
    end
-   -- model:add(nn.Linear(#weights[#weights],noutputs))
-   -- model:add(nn.LogSoftMax())
+   model:add(nn.Linear(#weights[#weights],noutputs))
+   model:add(nn.LogSoftMax())
 end
+-- load a model from a binary file trained by previous torch work or create a new model if could not find a model in save path
 if (model==nil) then
    print '==> load model'
 
@@ -34,7 +36,11 @@ if (model==nil) then
       print ('find model '..filename)
       model:close()
       model = torch.load(filename)
-      local curhid
+      -- parameters
+      ninputs = model:get(1).weight:size(2)
+      noutputs = model.modules[#model.modules].output:size(2)
+
+      local curhid         -- current hidden layer
       curhid = (model:size()-5)/3+1  -- 5 is the number of input and output layers (Lin, Re, Lin, LogSM)
       if (opt.model=='deepneunet' and curhid<opt.hidlaynb and opt.hidlaynb~=0 and opt.hidlaynb<=#nstates) then
          table.remove(model.modules, #model.modules)

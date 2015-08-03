@@ -1,0 +1,5 @@
+/home/chao/torch/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lib/libhtktoth.so
+/home/chao/torch/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lua/htktoth/init.lua
+/home/chao/torch/torch/install/lib/libchtk.so
+/home/chao/torch/torch/install/lib/libchtk.a
+/home/chao/torch/torch/install/include/chtk.h

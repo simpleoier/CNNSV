@@ -1,56 +1,103 @@
 print '==> executing all'
 
-dofile 'init.lua'
-dofile 'data.lua'
-dofile 'model.lua'
-dofile 'loss.lua'
-dofile 'train.lua'
+require 'init'
+require 'data'
+require 'model'
+require 'loss'
+require 'train'
 -- dofile 'test.lua'
 
 ----------------------------------------------------------------------
 print '==> training!'
 
--- Check if the scpfile argument is given and the scpfile can be found
-if not opt.scpfile then
-    error("Please specify a file containing the data with -scpfile")
-    return
-elseif io.open(opt.scpfile,"rb") == nil then
-    error(string.format("Given scp file %s cannot be found!",opt.scpfile))
-    return
-end
-
-local trainfbankfilelist = opt.scpfile
-local listfile = io.open(trainfbankfilelist, 'r')
-while (true) do
-    trainData = readData(listfile)
-    if (trainData:size()>0) then
-        local shuffleddata = torch.randperm(trainData:size())
-        train(shuffleddata)
-    else
-        break
+function mainfeat()
+    local trainfeatfile = opt.featfile
+    local featfile = io.open(trainfeatfile, 'r')
+    while (true) do
+        trainData = readDataFeat(featfile)
+        if (trainData:size()>0) then
+            local shuffleddata = torch.randperm(trainData:size())
+            train(shuffleddata)
+        else
+            break
+        end
+        collectgarbage()
     end
-    collectgarbage()
+    featfile:close()
+
+    print('==> final results')
+    confusion:updateValids()
+    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    print('global correct: ' .. (confusion.totalValid*100) .. '%')
 end
-listfile:close()
 
-confusion:updateValids()
-print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-print('global correct: ' .. (confusion.totalValid*100) .. '%')
+function mainscp()
+    readLabel(opt.labelfile)
+    local trainfbankfilelist = opt.scpfile
+    local listfile = io.open(trainfbankfilelist, 'r')
+    while (true) do
+        trainData = readDataScp2(listfile,opt.filenum)
+        if (trainData~=nil) then
+            local shuffleddata = torch.randperm(trainData:size())
+            train(shuffleddata)
+        else
+            break
+        end
+        collectgarbage()
+    end
+    listfile:close()
 
--- print(model:size())
--- trainData = ReadData(listfile)
--- for i=1,3 do
---     shuffle = torch.randperm(trainData:size())
---     train()
---     print(parameters:size())
---     print(parameters[3],parameters[30],parameters[300],parameters[3000],parameters[30000])
---     --print(model:get(1).weight:size())
---     print(model:get(1).weight[1][3],model:get(1).weight[1][30],model:get(1).weight[1][300],model:get(1).weight[3][360],model:get(1).weight[23][960])
---     parameters[3] = 100
---     print(parameters[3],parameters[30],parameters[300],parameters[3000],parameters[30000])
---     --print(model:get(1).weight:size())
---     print(model:get(1).weight[1][3],model:get(1).weight[1][30],model:get(1).weight[1][300],model:get(1).weight[3][360],model:get(1).weight[23][960])
+    print('==> final results')
+    confusion:updateValids()
+    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+end
+
+-- Check if the scpfile argument is given and the scpfile can be found
+if (not opt.scpfile) and (not opt.featfile) then
+    error("Please specify a file containing the data with -scpfile or Please specify a file containing the data with -fbankfile")
+    return
+elseif (opt.scpfile~='') then
+    if io.open(opt.scpfile,"rb") == nil then
+        error(string.format("Given scp file %s cannot be found!",opt.scpfile))
+        return
+    else
+        mainscp()
+    end
+elseif (opt.featfile~='') then
+    if io.open(opt.featfile,"rb") == nil then
+        error(string.format("Given feature file %s cannot be found!",opt.featfile))
+        return
+    else
+        mainfeat()
+    end
+end
+
+-- if not opt.featfile then
+--     error("Please specify a file containing the data with -fbankfile")
+--     return
+-- elseif io.open(opt.featfile,"rb") == nil then
+--     error(string.format("Given feature file %s cannot be found!",opt.featfile))
+--     return
 -- end
--- listfile:close()
 
+-- local trainfeatfile = opt.featfile
+-- local featfile = io.open(trainfeatfile, 'r')
+-- while (true) do
+--     trainData = readData(featfile)
+--     if (trainData:size()>0) then
+--         local shuffleddata = torch.randperm(trainData:size())
+--         train(shuffleddata)
+--     else
+--         break
+--     end
+--     collectgarbage()
+-- end
+-- featfile:close()
+
+-- confusion:updateValids()
+-- print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+-- print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+-- print('global correct: ' .. (confusion.totalValid*100) .. '%')
