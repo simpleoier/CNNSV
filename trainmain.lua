@@ -1,10 +1,10 @@
 print '==> executing all'
 
-dofile 'init.lua'
-dofile 'data.lua'
-dofile 'model.lua'
-dofile 'loss.lua'
-dofile 'train.lua'
+require 'init'
+require 'data'
+require 'model'
+require 'loss'
+require 'train'
 -- dofile 'test.lua'
 
 ----------------------------------------------------------------------
@@ -25,6 +25,7 @@ function mainfeat()
     end
     featfile:close()
 
+    print('==> final results')
     confusion:updateValids()
     print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
@@ -47,6 +48,7 @@ function mainscp()
     end
     listfile:close()
 
+    print('==> final results')
     confusion:updateValids()
     print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')

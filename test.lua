@@ -1,4 +1,14 @@
 print '==> defining test procedure'
+-- -- classes
+-- classes = {}
+-- for i=1,noutputs do
+--   classes[i] = ''..i
+-- end
+-- -- This matrix records the current confusion across classes
+-- confusionBatch = optim.ConfusionMatrix(classes)
+-- confusion = optim.ConfusionMatrix(classes)
+-- Log results to files
+testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 
 -- test function
 function test()
