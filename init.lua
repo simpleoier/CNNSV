@@ -3,7 +3,7 @@ require 'os'   --
 require 'nn'      -- provides a normalization operator
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
-require 'readModelParameters'
+require "libhtktoth"
 
 if not (opt) then
     cmd = torch.CmdLine()
@@ -16,6 +16,7 @@ if not (opt) then
     cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
     cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
     cmd:option('-filenum', 20, 'max nb of fbank file each time')
+    cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 2, 'number of threads')
@@ -56,19 +57,17 @@ end
 torch.manualSeed(opt.seed)
 print '==> define parameters'
 
--- trsize = 181
--- tesize = 181
 noutputs = 873
+frameExt = 5
 -- input dimensions
---nfeats = 3
---width = 32
---height = 32
---ninputs = nfeats*width*height
-ninputs = 1320
+nfeats = 3
+width = 40
+height = 2*frameExt+1
+ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-nstates = {1024,1024,1024,20}
+nstates = {1024,1024,1024,1024}
 --filtsize = 5
 --poolsize = 2
 -- classes

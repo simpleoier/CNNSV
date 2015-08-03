@@ -1,0 +1,2 @@
+/usr/bin/ar cr libhtktoth.a  CMakeFiles/htktoth_static.dir/htktoth.cpp.o
+/usr/bin/ranlib libhtktoth.a

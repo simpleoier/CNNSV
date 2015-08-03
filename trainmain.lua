@@ -32,11 +32,12 @@ function mainfeat()
 end
 
 function mainscp()
+    readLabel(opt.labelfile)
     local trainfbankfilelist = opt.scpfile
     local listfile = io.open(trainfbankfilelist, 'r')
     while (true) do
-        trainData = readDataScp(listfile)
-        if (trainData:size()>0) then
+        trainData = readDataScp2(listfile)
+        if (trainData~=nil) then
             local shuffleddata = torch.randperm(trainData:size())
             train(shuffleddata)
         else

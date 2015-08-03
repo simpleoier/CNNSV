@@ -1,5 +1,3 @@
-require("htklua/htkwrite")
-
 print '==> defining test procedure'
 
 -- test function
