@@ -21,7 +21,7 @@ readLabel(opt.labelfile)
 local testfbankfilelist = opt.scpfile
 local listfile = io.open(testfbankfilelist, 'r')
 while (true) do
-    testData = readDataScp2(listfile)
+    testData = readDataScp2(listfile,1)
     if (testData~=nil) then
         test()
     else

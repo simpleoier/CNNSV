@@ -37,7 +37,7 @@ function mainscp()
     local trainfbankfilelist = opt.scpfile
     local listfile = io.open(trainfbankfilelist, 'r')
     while (true) do
-        trainData = readDataScp2(listfile)
+        trainData = readDataScp2(listfile,opt.filenum)
         if (trainData~=nil) then
             local shuffleddata = torch.randperm(trainData:size())
             train(shuffleddata)

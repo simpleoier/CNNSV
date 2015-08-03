@@ -73,10 +73,10 @@ function readDataFeat(featfile)
    return Data
 end
 
-function readDataScp1(listfile)
+function readDataScp1(listfile,filenum)
    local lines = {}
    local curlinenum = 0
-   while (curlinenum<opt.filenum) do
+   while (curlinenum<filenum) do
       curlinenum = curlinenum+1
       local line = listfile:read()
       if (line~=nil) then
@@ -101,11 +101,11 @@ function readDataScp1(listfile)
    return Data
 end
 
-function readDataScp2(listfile)
+function readDataScp2(listfile,filenum)
    local feats = {}
    local labels = {}
    local curlinenum = 0
-   while (curlinenum<opt.filenum) do
+   while (curlinenum<filenum) do
       curlinenum = curlinenum+1
       local line = listfile:read()
       if (line~=nil) then
