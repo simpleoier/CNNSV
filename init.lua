@@ -66,8 +66,7 @@ ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- hidden units
-<<<<<<< HEAD
-nstates = {64,64,256,512}
+nstates = {128,256,1024,1024}
 filtsizew = 11
 filtsizeh = 3
 poolsize = 2
