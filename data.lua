@@ -37,11 +37,13 @@ end
 
 function readLabel(filename)
    filelabel = {}
+   nlabels = 0
    if (filename~='') then
       local fin = io.open(filename,'r')
       for line in fin:lines() do
          local l = line:split(' ')
          filelabel[l[1]] = tonumber(l[2])
+         nlabels = nlabels+1
       end
    end
 end
@@ -115,10 +117,10 @@ function readDataScp2(listfile,filenum)
          local feat = loadhtk(line, frameExt)
          for i=1,feat:size(1) do
             feats[#feats+1] = feat[i]
-            if (#filelabel~=0) then
+            if (nlabels~=0) then
                labels[#feats] = filelabel[chunk[1]]
             else
-               labels[#feats] = 1
+               labels[#feats] = 0
             end
          end
       else
@@ -130,6 +132,8 @@ function readDataScp2(listfile,filenum)
    if (#feats==0) then
       return
    end
+   print(labels)
+   -- print(labels)
    local tdata = torch.Tensor(#feats, feats[1]:size(1))
    local tlabels = torch.Tensor(#labels,1)
    for i=1,#feats do
