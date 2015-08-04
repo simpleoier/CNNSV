@@ -1,0 +1,18 @@
+Performing C++ SOURCE FILE Test COMPILER_SUPPORTS_CXX11 failed with the following output:
+Change Dir: /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2495068278/fast"
+make: Warning: File `Makefile' has modification time 24 s in the future
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2495068278.dir/build.make CMakeFiles/cmTryCompileExec2495068278.dir/build
+make[1]: Entering directory `/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/CMakeTmp'
+make[1]: Warning: File `CMakeFiles/cmTryCompileExec2495068278.dir/flags.make' has modification time 24 s in the future
+/usr/bin/cmake -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec2495068278.dir/src.cxx.o
+/usr/bin/c++    -DCOMPILER_SUPPORTS_CXX11   -std=c++11 -o CMakeFiles/cmTryCompileExec2495068278.dir/src.cxx.o -c /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/CMakeTmp/src.cxx
+cc1plus: error: unrecognized command line option '-std=c++11'
+make[1]: Leaving directory `/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/CMakeTmp'
+make[1]: *** [CMakeFiles/cmTryCompileExec2495068278.dir/src.cxx.o] Error 1
+make: *** [cmTryCompileExec2495068278/fast] Error 2
+
+Source file was:
+int main() { return 0;}

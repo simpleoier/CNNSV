@@ -1,0 +1,4 @@
+/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir
+/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk-static.dir
+/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth.dir
+/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir
