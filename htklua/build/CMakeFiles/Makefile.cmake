@@ -12,7 +12,6 @@ SET(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/2.8.12.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/2.8.12.2/CMakeSystem.cmake"
   "../chtk/CMakeLists.txt"
-<<<<<<< HEAD
   "/slfs1/users/xkc09/TOOLS/torch/install/share/cmake/torch/TorchConfig.cmake"
   "/slfs1/users/xkc09/TOOLS/torch/install/share/cmake/torch/TorchExports-release.cmake"
   "/slfs1/users/xkc09/TOOLS/torch/install/share/cmake/torch/TorchExports.cmake"
@@ -24,47 +23,11 @@ SET(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeGenericSystem.cmake"
   "/usr/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake"
-=======
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchConfig.cmake"
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchExports-release.cmake"
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchExports.cmake"
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchPackage.cmake"
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchPathsInit.cmake"
-  "/home/chao/torch/torch/install/share/cmake/torch/TorchWrap.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeCCompiler.cmake.in"
-  "/usr/share/cmake-2.8/Modules/CMakeCCompilerABI.c"
-  "/usr/share/cmake-2.8/Modules/CMakeCInformation.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeCXXCompiler.cmake.in"
-  "/usr/share/cmake-2.8/Modules/CMakeCXXCompilerABI.cpp"
-  "/usr/share/cmake-2.8/Modules/CMakeCXXInformation.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeClDeps.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCXXCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCompilerABI.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineCompilerId.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeDetermineSystem.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeFindBinUtils.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeGenericSystem.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeParseImplicitLinkInfo.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeSystem.cmake.in"
-  "/usr/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeTestCCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeTestCXXCompiler.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeTestCompilerCommon.cmake"
-  "/usr/share/cmake-2.8/Modules/CMakeUnixFindMake.cmake"
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
   "/usr/share/cmake-2.8/Modules/CheckCXXCompilerFlag.cmake"
   "/usr/share/cmake-2.8/Modules/CheckCXXSourceCompiles.cmake"
   "/usr/share/cmake-2.8/Modules/Compiler/GNU-C.cmake"
   "/usr/share/cmake-2.8/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake-2.8/Modules/Compiler/GNU.cmake"
-<<<<<<< HEAD
-=======
-  "/usr/share/cmake-2.8/Modules/MultiArchCross.cmake"
-  "/usr/share/cmake-2.8/Modules/Platform/Linux-CXX.cmake"
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU-C.cmake"
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU-CXX.cmake"
   "/usr/share/cmake-2.8/Modules/Platform/Linux-GNU.cmake"
@@ -80,14 +43,6 @@ SET(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 SET(CMAKE_MAKEFILE_PRODUCTS
-<<<<<<< HEAD
-=======
-  "CMakeFiles/2.8.12.2/CMakeSystem.cmake"
-  "CMakeFiles/2.8.12.2/CMakeCCompiler.cmake"
-  "CMakeFiles/2.8.12.2/CMakeCXXCompiler.cmake"
-  "CMakeFiles/2.8.12.2/CMakeCCompiler.cmake"
-  "CMakeFiles/2.8.12.2/CMakeCXXCompiler.cmake"
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   "chtk/CMakeFiles/CMakeDirectoryInformation.cmake"
   )

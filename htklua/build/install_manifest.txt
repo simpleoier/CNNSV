@@ -1,13 +1,5 @@
-<<<<<<< HEAD
 /slfs1/users/xkc09/TOOLS/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lib/libhtktoth.so
 /slfs1/users/xkc09/TOOLS/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lua/htktoth/init.lua
 /slfs1/users/xkc09/TOOLS/torch/install/lib/libchtk.so
 /slfs1/users/xkc09/TOOLS/torch/install/lib/libchtk.a
 /slfs1/users/xkc09/TOOLS/torch/install/include/chtk.h
-=======
-/home/chao/torch/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lib/libhtktoth.so
-/home/chao/torch/torch/install/lib/luarocks/rocks/htktoth/1.0-0/lua/htktoth/init.lua
-/home/chao/torch/torch/install/lib/libchtk.so
-/home/chao/torch/torch/install/lib/libchtk.a
-/home/chao/torch/torch/install/include/chtk.h
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d

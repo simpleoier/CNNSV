@@ -56,41 +56,11 @@ end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
-<<<<<<< HEAD
-noutputs = 203
--- input dimensions
-nfeats = 3
-featDim = 40
-extFram = 5
---width = 32
---height = 32
---ninputs = nfeats*width*height
-ninputs = nfeats*featDim*(2*extFram+1)
--- number of hidden units (for MLP only):
-nhiddens = ninputs / 2
--- hidden units
-nstates = {1024,1024,1024,1024}
---filtsize = 5
---poolsize = 2
--- classes
-classes = {}
-for i=1,noutputs do
-  classes[i] = ''..i
-end
-
--- This matrix records the current confusion across classes
-confusionBatch = optim.ConfusionMatrix(classes)
-confusion = optim.ConfusionMatrix(classes)
-
--- Log results to files
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
-=======
 print '==> define parameters'
 -- hidden units (for creating new model or loading model from binary)
 nstates = {1024,1024,1024,1024}
 -- number of units in output layer, but meaningless in loading model from binary file
-noutputs = 873
+noutputs = 203
 -- number of frame extension to each direction
 frameExt = 5
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
@@ -100,4 +70,3 @@ height = 2*frameExt+1
 ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d

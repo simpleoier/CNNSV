@@ -36,12 +36,7 @@ float chtk::swapfloatendian( const float inFloat )
 
 
 chtk::htkarray chtk::htk_load(std::string fname, int FRM_EXT){
-    struct htkheader{
-        int nsamples;
-        int sample_period;
-        short samplesize;
-        short parmkind;
-    }header;
+
 
     std::ifstream inp;
     inp.open(fname,std::ios::binary);
@@ -49,8 +44,10 @@ chtk::htkarray chtk::htk_load(std::string fname, int FRM_EXT){
         std::string exept= "File " + fname + " cannot be opened !\n";
         throw std::runtime_error(exept.c_str());
     }
+
+    chtk::htkheader header = load_header(inp);
     // Reading in the header file of any htk binary file
-    inp.read((char*)&header,sizeof(htkheader));
+
 
     // Generate the returning htk representation
     chtk::htkarray retarr(ntohl(header.nsamples),ntohl(header.sample_period),ntohs(header.samplesize),ntohs(header.parmkind),FRM_EXT);
@@ -88,4 +85,26 @@ chtk::htkarray chtk::htk_load(std::string fname, int FRM_EXT){
         }
     }
     return retarr;
+}
+
+chtk::htkheader chtk::load_header(std::ifstream &inp){
+    chtk::htkheader header;
+    inp.read((char*)&header,sizeof(htkheader));
+    return header;
+}
+
+chtk::htkheader chtk::load_header (std::string fname){
+    std::ifstream inp;
+    inp.open(fname,std::ios::binary);
+    if (!inp.is_open()){
+        std::string exept= "File " + fname + " cannot be opened !\n";
+        throw std::runtime_error(exept.c_str());
+    }
+    htkheader header = load_header(inp);
+    header.nsamples = ntohl(header.nsamples);
+    header.sample_period = ntohl(header.sample_period);
+    header.samplesize =ntohs(header.samplesize);
+    header.parmkind  = ntohs(header.parmkind);
+    return header;
+
 }

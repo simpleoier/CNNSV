@@ -35,17 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
-=======
-CMAKE_SOURCE_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua
-
-# The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 
 # Include any dependencies generated for this target.
 include CMakeFiles/htktoth_static.dir/depend.make
@@ -58,7 +51,6 @@ include CMakeFiles/htktoth_static.dir/flags.make
 
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: CMakeFiles/htktoth_static.dir/flags.make
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: ../htktoth.cpp
-<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/htktoth_static.dir/htktoth.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/htktoth_static.dir/htktoth.cpp.o -c /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp
@@ -70,19 +62,6 @@ CMakeFiles/htktoth_static.dir/htktoth.cpp.i: cmake_force
 CMakeFiles/htktoth_static.dir/htktoth.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/htktoth_static.dir/htktoth.cpp.s"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp -o CMakeFiles/htktoth_static.dir/htktoth.cpp.s
-=======
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/htktoth_static.dir/htktoth.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/htktoth_static.dir/htktoth.cpp.o -c /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/htktoth.cpp
-
-CMakeFiles/htktoth_static.dir/htktoth.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/htktoth_static.dir/htktoth.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/htktoth.cpp > CMakeFiles/htktoth_static.dir/htktoth.cpp.i
-
-CMakeFiles/htktoth_static.dir/htktoth.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/htktoth_static.dir/htktoth.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/htktoth.cpp -o CMakeFiles/htktoth_static.dir/htktoth.cpp.s
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o.requires:
 .PHONY : CMakeFiles/htktoth_static.dir/htktoth.cpp.o.requires
@@ -119,10 +98,6 @@ CMakeFiles/htktoth_static.dir/clean:
 .PHONY : CMakeFiles/htktoth_static.dir/clean
 
 CMakeFiles/htktoth_static.dir/depend:
-<<<<<<< HEAD
 	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir/DependInfo.cmake --color=$(COLOR)
-=======
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir/DependInfo.cmake --color=$(COLOR)
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 .PHONY : CMakeFiles/htktoth_static.dir/depend
 

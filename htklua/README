@@ -43,5 +43,20 @@ feat = loadhtk('feature.plp',1)
 Here the first parameter indicates the feature name/ path and the second one indicates the Frame extension ( how many frames should be concatenated left and right )
 
 
+Moreover we support for some other applications to only read the HTKheader
+
+You can do so by running:
+
+header = loadheader(FILENAME)
+
+The header is a table which consists of 4 different attributes:
+nsamples
+sampleperiod
+parmkind
+samplesize
+
+The most common use for this function is to read, process and then write a feature file.
+
+
 
 

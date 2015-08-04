@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir
 /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk-static.dir
 /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth.dir
 /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir
-=======
-/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir
-/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk-static.dir
-/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth.dir
-/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir
->>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
