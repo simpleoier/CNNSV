@@ -4,6 +4,16 @@ if opt.type == 'cuda' then
    criterion:cuda()
 end
 ----------------------------------------------------------------------
+-- classes
+classes = {}
+for i=1,noutputs do
+  classes[i] = ''..i
+end
+-- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
+confusion = optim.ConfusionMatrix(classes)
+-- Log results to files
+trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
 -- into a 1-dim vector

@@ -61,9 +61,7 @@ elseif opt.loss == 'mse' then
       testData.labels = telabels
    end
 else
-
    error('unknown -loss')
-
 end
 
 ----------------------------------------------------------------------

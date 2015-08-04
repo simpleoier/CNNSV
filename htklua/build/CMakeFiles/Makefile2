@@ -47,10 +47,17 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
+<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
+=======
+CMAKE_SOURCE_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 
 #=============================================================================
 # Target rules for target CMakeFiles/htktoth.dir
@@ -59,7 +66,11 @@ CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
 CMakeFiles/htktoth.dir/all: chtk/CMakeFiles/chtk.dir/all
 	$(MAKE) -f CMakeFiles/htktoth.dir/build.make CMakeFiles/htktoth.dir/depend
 	$(MAKE) -f CMakeFiles/htktoth.dir/build.make CMakeFiles/htktoth.dir/build
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles  3
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles  3
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 	@echo "Built target htktoth"
 .PHONY : CMakeFiles/htktoth.dir/all
 
@@ -69,9 +80,15 @@ all: CMakeFiles/htktoth.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/htktoth.dir/rule: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/htktoth.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/htktoth.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 0
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 .PHONY : CMakeFiles/htktoth.dir/rule
 
 # Convenience name for target.
@@ -94,7 +111,11 @@ clean: CMakeFiles/htktoth.dir/clean
 CMakeFiles/htktoth_static.dir/all:
 	$(MAKE) -f CMakeFiles/htktoth_static.dir/build.make CMakeFiles/htktoth_static.dir/depend
 	$(MAKE) -f CMakeFiles/htktoth_static.dir/build.make CMakeFiles/htktoth_static.dir/build
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles  4
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles  4
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 	@echo "Built target htktoth_static"
 .PHONY : CMakeFiles/htktoth_static.dir/all
 
@@ -104,9 +125,15 @@ all: CMakeFiles/htktoth_static.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/htktoth_static.dir/rule: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/htktoth_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/htktoth_static.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 0
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 .PHONY : CMakeFiles/htktoth_static.dir/rule
 
 # Convenience name for target.
@@ -146,7 +173,11 @@ chtk/preinstall:
 chtk/CMakeFiles/chtk.dir/all:
 	$(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/depend
 	$(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/build
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles  1
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles  1
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 	@echo "Built target chtk"
 .PHONY : chtk/CMakeFiles/chtk.dir/all
 
@@ -156,9 +187,15 @@ all: chtk/CMakeFiles/chtk.dir/all
 
 # Build rule for subdir invocation for target.
 chtk/CMakeFiles/chtk.dir/rule: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 0
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 .PHONY : chtk/CMakeFiles/chtk.dir/rule
 
 # Convenience name for target.
@@ -181,7 +218,11 @@ clean: chtk/CMakeFiles/chtk.dir/clean
 chtk/CMakeFiles/chtk-static.dir/all:
 	$(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/depend
 	$(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/build
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles  2
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles  2
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 	@echo "Built target chtk-static"
 .PHONY : chtk/CMakeFiles/chtk-static.dir/all
 
@@ -191,9 +232,15 @@ all: chtk/CMakeFiles/chtk-static.dir/all
 
 # Build rule for subdir invocation for target.
 chtk/CMakeFiles/chtk-static.dir/rule: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk-static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk-static.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 0
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 .PHONY : chtk/CMakeFiles/chtk-static.dir/rule
 
 # Convenience name for target.

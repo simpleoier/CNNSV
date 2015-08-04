@@ -12,7 +12,11 @@ description = {
       Load htk files into torch.
    ]],
    homepage = "..",
+<<<<<<< HEAD
    license = "sbt11"
+=======
+   license = "sbt11&hedi7"
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
 }
 
 dependencies = {

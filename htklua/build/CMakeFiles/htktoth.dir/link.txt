@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 /usr/bin/c++  -fPIC  -std=c++0x -O3 -DNDEBUG   -shared -Wl,-soname,libhtktoth.so -o libhtktoth.so CMakeFiles/htktoth.dir/htktoth.cpp.o  -L/slfs1/users/xkc09/TOOLS/torch/install/lib chtk/libchtk.so /slfs1/users/xkc09/TOOLS/torch/install/lib/libTH.so -lluaT -lz /opt/OpenBLAS/lib/libopenblas.so -Wl,-rpath,/slfs1/users/xkc09/TOOLS/torch/install/lib:/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk:/opt/OpenBLAS/lib: 
+=======
+/usr/bin/c++  -fPIC  -std=c++11 -O3 -DNDEBUG   -shared -Wl,-soname,libhtktoth.so -o libhtktoth.so CMakeFiles/htktoth.dir/htktoth.cpp.o  -L/home/chao/torch/torch/install/lib chtk/libchtk.so /home/chao/torch/torch/install/lib/libTH.so -lluaT -lz /opt/OpenBLAS/lib/libopenblas.so -Wl,-rpath,/home/chao/torch/torch/install/lib:/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk:/opt/OpenBLAS/lib: 
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d

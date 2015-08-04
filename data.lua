@@ -35,6 +35,17 @@ function parsefbank(lines, data, labels)
    end
 end
 
+function readLabel(filename)
+   filelabel = {}
+   if (filename~='') then
+      local fin = io.open(filename,'r')
+      for line in fin:lines() do
+         local l = line:split(' ')
+         filelabel[l[1]] = tonumber(l[2])
+      end
+   end
+end
+
 function readDataFeat(featfile)
    print('==> reading feature from '..opt.featfile)
    local lines = {}
@@ -62,7 +73,7 @@ function readDataFeat(featfile)
    return Data
 end
 
-function readDataScp(listfile)
+function readDataScp1(listfile)
    local lines = {}
    local curlinenum = 0
    while (curlinenum<opt.filenum) do
@@ -70,7 +81,7 @@ function readDataScp(listfile)
       local line = listfile:read()
       if (line~=nil) then
          local fbankfilename = line
-         print("Reading fbank from "..fbankfilename)
+         print("Reading feature from "..fbankfilename)
          readfbank(fbankfilename, lines)
       else
          break
@@ -86,6 +97,49 @@ function readDataScp(listfile)
       data = tdata,
       labels = tlabels,
       size = function() return #lines end
+   }
+   return Data
+end
+
+function readDataScp2(listfile)
+   local feats = {}
+   local labels = {}
+   local curlinenum = 0
+   while (curlinenum<opt.filenum) do
+      curlinenum = curlinenum+1
+      local line = listfile:read()
+      if (line~=nil) then
+         local filename = paths.basename(line)
+         local chunk = filename:split('_')
+         print("Reading feature from "..line)
+         local feat = loadhtk(line, frameExt)
+         for i=1,feat:size(1) do
+            feats[#feats+1] = feat[i]
+            if (#filelabel~=0) then
+               labels[#feats] = filelabel[chunk[1]]
+            else
+               labels[#feats] = 1
+            end
+         end
+      else
+         break
+      end
+   end
+   -- local tdata = torch.Tensor(#lines, ninputs)
+   -- local tlabels = torch.Tensor(#lines,1)
+   if (#feats==0) then
+      return
+   end
+   local tdata = torch.Tensor(#feats, feats[1]:size(1))
+   local tlabels = torch.Tensor(#labels,1)
+   for i=1,#feats do
+      tdata[i] = feats[i]
+      tlabels[i] = labels[i]
+   end
+   local Data = {
+      data = tdata,
+      labels = tlabels,
+      size = function() return #feats end
    }
    return Data
 end

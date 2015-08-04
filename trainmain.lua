@@ -1,10 +1,10 @@
 print '==> executing all'
 
-dofile 'init.lua'
-dofile 'data.lua'
-dofile 'model.lua'
-dofile 'loss.lua'
-dofile 'train.lua'
+require 'init'
+require 'data'
+require 'model'
+require 'loss'
+require 'train'
 -- dofile 'test.lua'
 
 ----------------------------------------------------------------------
@@ -25,6 +25,7 @@ function mainfeat()
     end
     featfile:close()
 
+    print('==> final results')
     confusion:updateValids()
     print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
@@ -32,11 +33,12 @@ function mainfeat()
 end
 
 function mainscp()
+    readLabel(opt.labelfile)
     local trainfbankfilelist = opt.scpfile
     local listfile = io.open(trainfbankfilelist, 'r')
     while (true) do
-        trainData = readDataScp(listfile)
-        if (trainData:size()>0) then
+        trainData = readDataScp2(listfile)
+        if (trainData~=nil) then
             local shuffleddata = torch.randperm(trainData:size())
             train(shuffleddata)
         else
@@ -46,6 +48,7 @@ function mainscp()
     end
     listfile:close()
 
+    print('==> final results')
     confusion:updateValids()
     print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')

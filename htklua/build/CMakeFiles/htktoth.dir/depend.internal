@@ -3,6 +3,7 @@
 
 CMakeFiles/htktoth.dir/htktoth.cpp.o
  ../chtk/chtk.h
+<<<<<<< HEAD
  /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp
  /slfs1/users/xkc09/TOOLS/torch/install/include/TH/TH.h
  /slfs1/users/xkc09/TOOLS/torch/install/include/TH/THAllocator.h
@@ -40,3 +41,42 @@ CMakeFiles/htktoth.dir/htktoth.cpp.o
  /slfs1/users/xkc09/TOOLS/torch/install/include/luaT.h
  /slfs1/users/xkc09/TOOLS/torch/install/include/luaconf.h
  /slfs1/users/xkc09/TOOLS/torch/install/include/lualib.h
+=======
+ /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/htktoth.cpp
+ /home/chao/torch/torch/install/include/TH/TH.h
+ /home/chao/torch/torch/install/include/TH/THAllocator.h
+ /home/chao/torch/torch/install/include/TH/THAtomic.h
+ /home/chao/torch/torch/install/include/TH/THBlas.h
+ /home/chao/torch/torch/install/include/TH/THDiskFile.h
+ /home/chao/torch/torch/install/include/TH/THFile.h
+ /home/chao/torch/torch/install/include/TH/THGeneral.h
+ /home/chao/torch/torch/install/include/TH/THGenerateAllTypes.h
+ /home/chao/torch/torch/install/include/TH/THGenerateFloatTypes.h
+ /home/chao/torch/torch/install/include/TH/THGenerateIntTypes.h
+ /home/chao/torch/torch/install/include/TH/THLapack.h
+ /home/chao/torch/torch/install/include/TH/THLogAdd.h
+ /home/chao/torch/torch/install/include/TH/THMemoryFile.h
+ /home/chao/torch/torch/install/include/TH/THRandom.h
+ /home/chao/torch/torch/install/include/TH/THStorage.h
+ /home/chao/torch/torch/install/include/TH/THTensor.h
+ /home/chao/torch/torch/install/include/TH/THTensorApply.h
+ /home/chao/torch/torch/install/include/TH/THTensorDimApply.h
+ /home/chao/torch/torch/install/include/TH/THTensorMacros.h
+ /home/chao/torch/torch/install/include/TH/THVector.h
+ /home/chao/torch/torch/install/include/TH/generic/THBlas.h
+ /home/chao/torch/torch/install/include/TH/generic/THLapack.h
+ /home/chao/torch/torch/install/include/TH/generic/THStorage.h
+ /home/chao/torch/torch/install/include/TH/generic/THStorageCopy.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensor.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensorConv.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensorCopy.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensorLapack.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensorMath.h
+ /home/chao/torch/torch/install/include/TH/generic/THTensorRandom.h
+ /home/chao/torch/torch/install/include/TH/generic/THVector.c
+ /home/chao/torch/torch/install/include/lauxlib.h
+ /home/chao/torch/torch/install/include/lua.h
+ /home/chao/torch/torch/install/include/luaT.h
+ /home/chao/torch/torch/install/include/luaconf.h
+ /home/chao/torch/torch/install/include/lualib.h
+>>>>>>> f545cc7c14b10ec1e879ee5cd4d7c5e234efa35d
