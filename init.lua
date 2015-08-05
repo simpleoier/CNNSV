@@ -1,6 +1,7 @@
 require 'torch'   -- torch
 require 'os'   --
 require 'nn'      -- provides a normalization operator
+require 'cunn'
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
 require "libhtktoth"
@@ -19,7 +20,7 @@ if not (opt) then
     cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-    cmd:option('-threads', 2, 'number of threads')
+    cmd:option('-threads', 4, 'number of threads')
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
@@ -30,7 +31,7 @@ if not (opt) then
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
-    cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
+    cmd:option('-save', '../DNNresults', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
     cmd:option('-learningRate', 1, 'learning rate at t=0')

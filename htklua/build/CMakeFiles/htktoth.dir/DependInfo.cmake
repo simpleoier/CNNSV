@@ -4,20 +4,20 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/htktoth.cpp" "/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles/htktoth.dir/htktoth.cpp.o"
+  "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp" "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth.dir/htktoth.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir/DependInfo.cmake"
+  "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir/DependInfo.cmake"
   )
 
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
-  "/home/chao/torch/torch/install/include"
-  "/home/chao/torch/torch/install/include/TH"
-  "/home/chao/torch/torch/install"
+  "/slfs1/users/xkc09/TOOLS/torch/install/include"
+  "/slfs1/users/xkc09/TOOLS/torch/install/include/TH"
+  "/slfs1/users/xkc09/TOOLS/torch/install"
   "../chtk"
   ".."
   )

@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua
+CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build
+CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -110,14 +110,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/progress.marks
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/CMakeFiles 0
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/progress.marks
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/clean
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/clean
 .PHONY : clean
 
 # The main clean target
@@ -126,22 +126,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/preinstall
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/preinstall
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 chtk/CMakeFiles/chtk.dir/rule:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk.dir/rule
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk.dir/rule
 .PHONY : chtk/CMakeFiles/chtk.dir/rule
 
 # Convenience name for target.
@@ -150,12 +150,12 @@ chtk: chtk/CMakeFiles/chtk.dir/rule
 
 # fast build rule for target.
 chtk/fast:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/build
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/build
 .PHONY : chtk/fast
 
 # Convenience name for target.
 chtk/CMakeFiles/chtk-static.dir/rule:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk-static.dir/rule
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f CMakeFiles/Makefile2 chtk/CMakeFiles/chtk-static.dir/rule
 .PHONY : chtk/CMakeFiles/chtk-static.dir/rule
 
 # Convenience name for target.
@@ -164,7 +164,7 @@ chtk-static: chtk/CMakeFiles/chtk-static.dir/rule
 
 # fast build rule for target.
 chtk-static/fast:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/build
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/build
 .PHONY : chtk-static/fast
 
 chtk.o: chtk.cpp.o
@@ -172,8 +172,8 @@ chtk.o: chtk.cpp.o
 
 # target to build an object file
 chtk.cpp.o:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.o
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.o
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.o
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.o
 .PHONY : chtk.cpp.o
 
 chtk.i: chtk.cpp.i
@@ -181,8 +181,8 @@ chtk.i: chtk.cpp.i
 
 # target to preprocess a source file
 chtk.cpp.i:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.i
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.i
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.i
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.i
 .PHONY : chtk.cpp.i
 
 chtk.s: chtk.cpp.s
@@ -190,8 +190,8 @@ chtk.s: chtk.cpp.s
 
 # target to generate assembly for a file
 chtk.cpp.s:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.s
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.s
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk.dir/build.make chtk/CMakeFiles/chtk.dir/chtk.cpp.s
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(MAKE) -f chtk/CMakeFiles/chtk-static.dir/build.make chtk/CMakeFiles/chtk-static.dir/chtk.cpp.s
 .PHONY : chtk.cpp.s
 
 # Help Target
@@ -222,6 +222,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

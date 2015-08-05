@@ -49,12 +49,24 @@ namespace chtk{
 		size_t parmkind;
 	};
 
+    struct htkheader{
+        int nsamples;
+        int sample_period;
+        short samplesize;
+        short parmkind;
+    }header;
+
 	htkarray htk_load(std::string fname,int FRM_EXT);
 
     float swapfloatendian( const float inFloat );
 
     void swapfloatendian( char* inFloat );
 
+    // Loading the header from a given filename
+    htkheader load_header(std::string fname);
+
+    // The reads in the header and returns it to the load_header(string) function
+    htkheader load_header(std::ifstream &fstream);
 
 }
 #endif
