@@ -6,7 +6,37 @@
 
 #IncludeRegexTransform: 
 
+<<<<<<< HEAD
 /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/htktoth.cpp
+=======
+../chtk/chtk.h
+string
+-
+stdexcept
+-
+sstream
+-
+vector
+-
+cstdio
+-
+typeinfo
+-
+iostream
+-
+cassert
+-
+zlib.h
+-
+map
+-
+memory
+-
+stdint.h
+-
+
+/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 lua.h
 -
 lauxlib.h
@@ -215,6 +245,7 @@ generic/THVector.c
 /slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THVector.c
 THGenerateIntTypes.h
 /slfs1/users/xkc09/TOOLS/torch/install/include/TH/THGenerateIntTypes.h
+<<<<<<< HEAD
 
 /slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THBlas.h
 
@@ -263,6 +294,30 @@ memory
 -
 stdint.h
 -
+=======
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THBlas.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THLapack.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THStorage.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THStorageCopy.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensor.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorConv.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorCopy.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorLapack.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorMath.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorRandom.h
+
+/slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THVector.c
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 
 /slfs1/users/xkc09/TOOLS/torch/install/include/lauxlib.h
 stddef.h

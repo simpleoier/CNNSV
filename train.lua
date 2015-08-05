@@ -83,7 +83,7 @@ function train(shuffleddata)
       xlua.progress(t, trainData:size())
       -- create mini batch
       local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1), nfeats, height, width)
-      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1))
       if opt.type == 'double' then inputs = inputs:double()
       elseif opt.type == 'cuda' then inputs = inputs:cuda() end
       if opt.type == 'double' then targets = targets:double()
@@ -91,13 +91,14 @@ function train(shuffleddata)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffleddata[i]]
-         local target = trainData.labels[shuffleddata[i]][1]
+         local target = trainData.labels[shuffleddata[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
          inputs[i-t+1] = input
          targets[i-t+1] = target
       end
-      targets = targets:squeeze(2)
+      -- targets = targets:squeeze(2)
+
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
@@ -111,37 +112,35 @@ function train(shuffleddata)
                         -- f is the average of all criterions
                         local f = 0
 
-                        for i = 1,inputs:size(1) do
-                          -- estimate f
-                          local output = model:forward(inputs[i])
-                          -- print(output:size())
-                          local err = criterion:forward(output, targets[i])
-                          f = f + err
+                        local outputs = model:forward(inputs)
+                        local err = criterion:forward(outputs, targets)
+                        f = f + err
 
-                          -- estimate df/dW
-                          local df_do = criterion:backward(output, targets[i])
-                          model:backward(inputs[i], df_do)
-                          
-                          -- update confusion
-                          confusionBatch:add(output, targets[i])
-                          confusion:add(output, targets[i])
+                        -- estimate df/dW
+                        local df_do = criterion:backward(outputs, targets)
+                        model:backward(inputs, df_do)
+                        -- update confusion
+                        confusionBatch:batchAdd(outputs, targets)
+                        confusion:batchAdd(outputs, targets)
 
-                          correct = correct or 0
-                          wrong = wrong or 0
-                          local maxind,maxpred
-                          maxind = 1 maxpred = output[1]
-                          for j=2,output:size(1) do
-                              if (output[j]>maxpred) then
-                                 maxpred = output[j]
-                                 maxind = j
+                        correct = correct or 0
+                        wrong = wrong or 0
+                        for i=1,inputs:size(1) do
+                           local maxindex,maxpred
+                           maxindex = 1
+                           maxpred = outputs[i][1]
+                           for j=2,outputs:size(2) do
+                              if outputs[i][j]>maxpred then
+                                 maxpred = outputs[i][j]
+                                 maxindex = j
                               end
-                          end
-                          if (maxind==targets[i]) then
-                             correct = correct+1
-                          else
-                             wrong = wrong+1
-                          end
-                       end
+                           end
+                           if (maxindex==targets[i]) then
+                              correct = correct+1
+                           else
+                              wrong = wrong+1
+                           end
+                        end
 
                         -- normalize gradients and f(X)
                         gradParameters:div(inputs:size(1))

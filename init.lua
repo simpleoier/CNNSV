@@ -20,7 +20,7 @@ if not (opt) then
     cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-    cmd:option('-threads', 2, 'number of threads')
+    cmd:option('-threads', 4, 'number of threads')
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
@@ -58,8 +58,7 @@ torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
 print '==> define parameters'
-
--- hidden units
+-- hidden units (for creating new model or loading model from binary)
 nstates = {128,256,1024,1024}
 filtsizew = 11
 filtsizeh = 3
@@ -78,4 +77,3 @@ nhiddens = ninputs / 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
-

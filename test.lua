@@ -24,6 +24,9 @@ function test()
    -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
    model:evaluate()
 
+   local inputs = testData.data
+   local targets = testData.labels
+
    if opt.type == 'double' then inputs = inputs:double()
    elseif opt.type == 'cuda' then inputs = inputs:cuda() end
 
@@ -39,10 +42,10 @@ function test()
    print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
    local botnecktable = torch.totable(botneckout)
 
-   for k,v in pairs(botnecktable) do
-      local outputfeature = paths.concat(outputpath,k..'.feat')
-      writehtk(outputfeature,1,100000,#botnecktable[1],"USER",v)
-   end
+   local botneck1d_feat = torch.totable(botneckout:view(botneckout:nElement()))
+
+   local outputfeature = paths.concat(outputpath,filename)
+   writehtk(outputfeature,#botnecktable,100000,#botnecktable[1],"USER",botneck1d_feat)
 
    confusion:batchAdd(preds, targets)
    -- timing

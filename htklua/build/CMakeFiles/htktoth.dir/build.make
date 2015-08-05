@@ -35,10 +35,17 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
+<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build
+=======
+CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 
 # Include any dependencies generated for this target.
 include CMakeFiles/htktoth.dir/depend.make
@@ -51,6 +58,7 @@ include CMakeFiles/htktoth.dir/flags.make
 
 CMakeFiles/htktoth.dir/htktoth.cpp.o: CMakeFiles/htktoth.dir/flags.make
 CMakeFiles/htktoth.dir/htktoth.cpp.o: ../htktoth.cpp
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/htktoth.dir/htktoth.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/htktoth.dir/htktoth.cpp.o -c /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/htktoth.cpp
@@ -62,6 +70,19 @@ CMakeFiles/htktoth.dir/htktoth.cpp.i: cmake_force
 CMakeFiles/htktoth.dir/htktoth.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/htktoth.dir/htktoth.cpp.s"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/htktoth.cpp -o CMakeFiles/htktoth.dir/htktoth.cpp.s
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_report /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/htktoth.dir/htktoth.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/htktoth.dir/htktoth.cpp.o -c /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp
+
+CMakeFiles/htktoth.dir/htktoth.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/htktoth.dir/htktoth.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp > CMakeFiles/htktoth.dir/htktoth.cpp.i
+
+CMakeFiles/htktoth.dir/htktoth.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/htktoth.dir/htktoth.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp -o CMakeFiles/htktoth.dir/htktoth.cpp.s
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 
 CMakeFiles/htktoth.dir/htktoth.cpp.o.requires:
 .PHONY : CMakeFiles/htktoth.dir/htktoth.cpp.o.requires
@@ -100,6 +121,10 @@ CMakeFiles/htktoth.dir/clean:
 .PHONY : CMakeFiles/htktoth.dir/clean
 
 CMakeFiles/htktoth.dir/depend:
+<<<<<<< HEAD
 	cd /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles/htktoth.dir/DependInfo.cmake --color=$(COLOR)
+=======
+	cd /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth.dir/DependInfo.cmake --color=$(COLOR)
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 .PHONY : CMakeFiles/htktoth.dir/depend
 

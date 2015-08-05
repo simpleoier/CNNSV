@@ -4,7 +4,11 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
+<<<<<<< HEAD
   "/slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/htktoth.cpp" "/slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles/htktoth_static.dir/htktoth.cpp.o"
+=======
+  "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/htktoth.cpp" "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/htktoth_static.dir/htktoth.cpp.o"
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

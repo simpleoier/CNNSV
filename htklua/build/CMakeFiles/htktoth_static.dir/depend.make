@@ -33,7 +33,10 @@ CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/inst
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorMath.h
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THTensorRandom.h
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/TH/generic/THVector.c
+<<<<<<< HEAD
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/chtk.h
+=======
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/lauxlib.h
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/lua.h
 CMakeFiles/htktoth_static.dir/htktoth.cpp.o: /slfs1/users/xkc09/TOOLS/torch/install/include/luaT.h

@@ -39,10 +39,17 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
+<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build
+=======
+CMAKE_SOURCE_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -110,9 +117,15 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/CNNsrc/htklua/build/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles/progress.marks
+	$(MAKE) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start /slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/CMakeFiles 0
+>>>>>>> 2d75f91783f3cee1624a726da8fc7dc50c44d368
 .PHONY : all
 
 # The main clean target
