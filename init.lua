@@ -20,7 +20,7 @@ if not (opt) then
     cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-    cmd:option('-threads', 2, 'number of threads')
+    cmd:option('-threads', 4, 'number of threads')
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
@@ -31,7 +31,7 @@ if not (opt) then
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
-    cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
+    cmd:option('-save', '../DNNresults', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
     cmd:option('-learningRate', 2, 'learning rate at t=0')
@@ -67,7 +67,7 @@ poolsize = 2
 noutputs = 203
 -- number of frame extension to each direction
 frameExt = 5
--- -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
+-- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
 nfeats = 3
 width = 40 
 height = 2*frameExt+1

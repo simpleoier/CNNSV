@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/chtk/chtk.cpp" "/home/chao/speechlab/summervacation/NeuralNetwork/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir/chtk.cpp.o"
+  "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/chtk/chtk.cpp" "/slfs1/users/xkc09/CNNRSR2015/DNNsrc/htklua/build/chtk/CMakeFiles/chtk.dir/chtk.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

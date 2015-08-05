@@ -115,7 +115,7 @@ function readDataScp2(listfile,filenum)
       curlinenum = curlinenum+1
       local line = listfile:read()
       if (line~=nil) then
-         local filename = paths.basename(line)
+         filename = paths.basename(line)
          local chunk = filename:split('_')
          print("Reading feature from "..line)
          local feat = loadhtk(line, frameExt)
@@ -124,7 +124,7 @@ function readDataScp2(listfile,filenum)
             if (nlabels~=0) then
                labels[#feats] = filelabel[chunk[1]]
             else
-               labels[#feats] = 1
+               labels[#feats] = 0
             end
          end
       else
@@ -135,9 +135,15 @@ function readDataScp2(listfile,filenum)
    if (#feats==0) then
       return
    end
+<<<<<<< HEAD
    local tdata = torch.Tensor(#feats, nfeats, height, width)
    local tlabels = torch.Tensor(#feats,1)
 
+=======
+   -- print(labels)
+   local tdata = torch.Tensor(#feats, feats[1]:size(1))
+   local tlabels = torch.Tensor(#labels,1)
+>>>>>>> 2c9ba4bb892e636c1f7b6a5228dc15ded6ddeb57
    for i=1,#feats do
       for h = 1, height do
          for m = 1, nfeats do

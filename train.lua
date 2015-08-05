@@ -98,6 +98,7 @@ function train(shuffleddata)
          targets[i-t+1] = target
       end
       targets = targets:squeeze(2)
+      
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters

@@ -32,21 +32,22 @@ function test()
 
    -- test over test data
    print('==> testing on test set')
-   for i=1,inputs:size(1) do
-      local pred = model:forward(inputs[i])
-      local lastlayer = #model.modules
-      -- Take the output of the layer before the last one
-      local botneckout= model.modules[lastlayer-2].output
-      local outputpath = paths.concat(opt.save,"features/")
-      os.execute('mkdir -p ' .. outputpath)
-      print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
-      local botnecktable = torch.totable(botneckout)
 
-      local outputfeature = paths.concat(outputpath,i..'.feat')
-      writehtk(outputfeature,1,100000,#botnecktable,"USER",botnecktable)
+   local preds = model:forward(inputs)
+   local lastlayer = #model.modules
+   -- Take the output of the layer before the last one
+   local botneckout = model.modules[lastlayer-2].output
+   local outputpath = paths.concat(opt.save,"features/")
+   os.execute('mkdir -p ' .. outputpath)
+   print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
+   local botnecktable = torch.totable(botneckout)
 
-      confusion:add(pred, targets[i])
-   end
+   local botneck1d_feat = torch.totable(botneckout:view(botneckout:nElement()))
+
+   local outputfeature = paths.concat(outputpath,filename)
+   writehtk(outputfeature,#botnecktable,100000,#botnecktable[1],"USER",botneck1d_feat)
+
+   confusion:batchAdd(preds, targets)
    -- timing
    time = sys.clock() - time
    time = time / testData:size()
