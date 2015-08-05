@@ -64,7 +64,7 @@ filtsizew = 11
 filtsizeh = 3
 poolsize = 2
 -- number of units in output layer, but meaningless in loading model from binary file
-noutputs = 873
+noutputs = 203
 -- number of frame extension to each direction
 frameExt = 5
 -- -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)

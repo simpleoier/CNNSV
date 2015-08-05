@@ -85,19 +85,20 @@ if (model==nil) then
 
             -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
             model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsizew, filtsizeh))
-            curState = curState+1
             model:add(nn.ReLU())
             model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
+            curState = curState+1
 
             -- stage 2 : filter bank -> squashing -> L2 pooling -> normalization
-            -- model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsize, filtsize))
-            -- curState = curState+1
-            -- model:add(nn.ReLU())
-            -- model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
+            model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsizew, filtsizeh))    -- output size is {nstates[curState], height2-filtsizeh+1, width2-filtsizew+1}
+            model:add(nn.ReLU())
+            model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))                -- output size is {nstates[curState], (height2-filtersizeh+1)/poolsize, (width2-filtersizew+1)/poolsize}
+            curState = curState+1
 
             -- stage 3 : standard 2-layer neural network
-            -- model:add(nn.View(nstates[2]*filtsize*filtsize))
-            -- model:add(nn.Dropout(0.5))
+            model:add(nn.Reshape(nstates[curState-1]*width2*height2))
+            model:add(nn.Linear(nstates[curState-1]*width2*height2,nstates[curState]))
+            model:add(nn.ReLU())
             for i = curState,#nstates-1 do
                model:add(nn.Linear(nstates[i], nstates[i+1]))
                model:add(nn.PReLU())
@@ -105,6 +106,7 @@ if (model==nil) then
             end
             model:add(nn.Linear(nstates[#nstates], noutputs))
             model:add(nn.LogSoftMax())
+
 
          else
             -- a typical convolutional network, with locally-normalized hidden
