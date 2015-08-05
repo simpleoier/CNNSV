@@ -1,5 +1,6 @@
-../DNNsrc/data/f008_06_004
-../DNNsrc/data/m031_09_024
-../DNNsrc/data/m037_01_021
-../DNNsrc/data/f025_04_025
-../DNNsrc/data/f030_03_017
+data/f001_01_001.fbank
+data/f008_06_004.fbank
+data/f025_04_025.fbank
+data/f030_03_017.fbank
+data/m031_09_024.fbank
+data/m037_01_021.fbank

@@ -1,6 +1,14 @@
-require("htklua/htkwrite")
-
 print '==> defining test procedure'
+-- -- classes
+classes = {}
+for i=1,noutputs do
+  classes[i] = ''..i
+end
+-- -- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
+confusion = optim.ConfusionMatrix(classes)
+-- Log results to files
+testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 
 -- test function
 function test()
@@ -22,11 +30,11 @@ function test()
    -- test over test data
    print('==> testing on test set')
 
-   local pred = model:forward(inputs)
+   local preds = model:forward(inputs)
    local lastlayer = #model.modules
    -- Take the output of the layer before the last one
-   local botneckout= model.modules[lastlayer-2].output
-   local outputpath = paths.concat(opt.save,"features")
+   local botneckout = model.modules[lastlayer-2].output
+   local outputpath = paths.concat(opt.save,"features/")
    os.execute('mkdir -p ' .. outputpath)
    print("==> Saving output layer "..(lastlayer-2).." to " .. outputpath)
    local botnecktable = torch.totable(botneckout)
@@ -36,7 +44,7 @@ function test()
       writehtk(outputfeature,1,100000,#botnecktable[1],"USER",v)
    end
 
-   confusion:batchAdd(pred, targets)
+   confusion:batchAdd(preds, targets)
    -- timing
    time = sys.clock() - time
    time = time / testData:size()

@@ -1,9 +1,10 @@
 ----------------------------------------------------------------------
-
-local weights,bias,activations
+-- reading parameters from a txt file, usually trained by TNET or other tools
 if (opt.modelPara~='') then
+   local weights,bias,activations
    print("Reading parameters from "..opt.modelPara)
    weights,bias,activations = readModelPara(opt.modelPara)
+   ninputs = #weights[1][1]
    model = nn.Sequential()
    for i=1,#weights do
       if (i==1) then
@@ -21,9 +22,10 @@ if (opt.modelPara~='') then
          model:add(nn.ReLU())
       end
    end
-   -- model:add(nn.Linear(#weights[#weights],noutputs))
-   -- model:add(nn.LogSoftMax())
+   model:add(nn.Linear(#weights[#weights],noutputs))
+   model:add(nn.LogSoftMax())
 end
+-- load a model from a binary file trained by previous torch work or create a new model if could not find a model in save path
 if (model==nil) then
    print '==> load model'
 
@@ -34,6 +36,26 @@ if (model==nil) then
       print ('find model '..filename)
       model:close()
       model = torch.load(filename)
+      -- parameters
+      ninputs = model:get(1).weight:size(2)
+      noutputs = model.modules[#model.modules].output:size(2)
+
+      local curhid         -- current hidden layer
+      curhid = (model:size()-5)/3+1  -- 5 is the number of input and output layers (Lin, Re, Lin, LogSM)
+      if (opt.model=='deepneunet' and curhid<opt.hidlaynb and opt.hidlaynb~=0 and opt.hidlaynb<=#nstates) then
+         table.remove(model.modules, #model.modules)
+         table.remove(model.modules, #model.modules)
+         for i=1, opt.hidlaynb-curhid do
+            model:add(nn.Linear(nstates[curhid],nstates[curhid+1]))
+            model:add(nn.PReLU(),model:size())
+            model:add(nn.BatchNormalization(nstates[curhid+1]))
+            curhid = curhid+1
+         end
+         model:add(nn.Linear(nstates[curhid],noutputs))
+         model:add(nn.LogSoftMax())
+      elseif (opt.hidlaynb>#nstates) then
+         print("Warning: too many layers to build, not enough nstates")
+      end
    else
       print ('==> model in '..filename..' is not found')
       print '==> construct model'
@@ -63,19 +85,20 @@ if (model==nil) then
 
             -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
             model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsizew, filtsizeh))
-            curState = curState+1
             model:add(nn.ReLU())
             model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
+            curState = curState+1
 
             -- stage 2 : filter bank -> squashing -> L2 pooling -> normalization
-            -- model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsize, filtsize))
-            -- curState = curState+1
-            -- model:add(nn.ReLU())
-            -- model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
+            model:add(nn.SpatialConvolutionMM(nstates[curState-1], nstates[curState], filtsizew, filtsizeh))	-- output size is {nstates[curState], height2-filtsizeh+1, width2-filtsizew+1}
+            model:add(nn.ReLU())
+            model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))		-- output size is {nstates[curState], (height2-filtersizeh+1)/poolsize, (width2-filtersizew+1)/poolsize}
+   	    curState = curState+1
 
             -- stage 3 : standard 2-layer neural network
-            -- model:add(nn.View(nstates[2]*filtsize*filtsize))
-            -- model:add(nn.Dropout(0.5))
+	    model:add(nn.Reshape(nstates[curState-1]*width2*height2))
+            model:add(nn.Linear(nstates[curState-1]*width2*height2,nstates[curState]))
+            model:add(nn.ReLU())
             for i = curState,#nstates-1 do
                model:add(nn.Linear(nstates[i], nstates[i+1]))
                model:add(nn.PReLU())
@@ -123,15 +146,21 @@ if (model==nil) then
             model:add(nn.LogSoftMax())
          end
       elseif opt.model == 'deepneunet' then
+         local nhidla
+         nhidla = #nstates
+         if (opt.hidlaynb~=0) then
+            nhidla = math.min(nhidla,opt.hidlaynb)
+         end
          model = nn.Sequential()
          model:add(nn.Linear(ninputs,nstates[1]))
          model:add(nn.PReLU())
-         for i = 1,#nstates-1 do
+         model:add(nn.BatchNormalization(nstates[1]))
+         for i = 1,nhidla-1 do
             model:add(nn.Linear(nstates[i], nstates[i+1]))
             model:add(nn.PReLU())
             model:add(nn.BatchNormalization(nstates[i+1]))
          end
-         model:add(nn.Linear(nstates[#nstates], noutputs))
+         model:add(nn.Linear(nstates[nhidla], noutputs))
          model:add(nn.LogSoftMax())
       else
 

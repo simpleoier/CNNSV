@@ -1,30 +1,24 @@
-A small script written in c++11 to write a htk file in binary.
+A small script written in c++11 to write a lua table into a binary and on the other hand to read in an htkfile to a lua float tensor.
 
 Installation:
-The precompiled library can already be used, just make sure you always copy htkwrite.so with your .lua file and that the library is in the same
-directory as the to be executed .lua file.
+You need to install the script at your local torch installation. Therefore you can access the functions anytime, as long as you use your installed torch implementation to run any code.
 
+Therefore , checkout the directory and just run:
 
-Compiling ( if necessary ):
+luarocks make
 
-Just run:
-make
-
-Make sure your compiler is c++11 compatible ( g++4.7 or above ). Otherwise change the flag from std=c++11 to std=c++0x if you use g++4.6.
-
-Testing :
-
-run:
-make test && ./testhtkwrite
-
+Make sure your compiler is c++11 compatible ( g++4.7 or above ). Otherwise cmake will change to use the c++0x flag, which works for gcc4.6 and above.
 
 To run it using Lua ( example ):
 
-require ("htkwrite")
-arr = {1,2,3,4,5}
-writehtk("feature.plp",3,100000,5,"PLP",arr)
+require "libhtktoth"
+arr = {}
+for i=1,100000 do
+    arr[i] = i
+end
+writehtk("feature.plp",10000,100000,10,"PLP",arr)
 
-which writes into the file feature.plp the feature, with 3 samples, a sampleperiod of 100000 ( 10ns) , 5 dimensions and the PLP type is used.
+which writes into the file feature.plp the feature, with 10000 samples, a sampleperiod of 100000 ( 10ns) , 10 dimensions and the PLP type is used.
 Datawise we use the table arr.
 
 The only unclear parameter is the feature type. It can be one of the following:
@@ -40,4 +34,29 @@ MELSPEC
 USER
 DISCRETE
 PLP
+
+
+To load the feature simply use:
+
+feat = loadhtk('feature.plp',1)
+
+Here the first parameter indicates the feature name/ path and the second one indicates the Frame extension ( how many frames should be concatenated left and right )
+
+
+Moreover we support for some other applications to only read the HTKheader
+
+You can do so by running:
+
+header = loadheader(FILENAME)
+
+The header is a table which consists of 4 different attributes:
+nsamples
+sampleperiod
+parmkind
+samplesize
+
+The most common use for this function is to read, process and then write a feature file.
+
+
+
 

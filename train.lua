@@ -4,6 +4,16 @@ if opt.type == 'cuda' then
    criterion:cuda()
 end
 ----------------------------------------------------------------------
+-- classes
+classes = {}
+for i=1,noutputs do
+  classes[i] = ''..i
+end
+-- This matrix records the current confusion across classes
+confusionBatch = optim.ConfusionMatrix(classes)
+confusion = optim.ConfusionMatrix(classes)
+-- Log results to files
+trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 -- Retrieve parameters and gradients:
 -- this extracts and flattens all the trainable parameters of the mode
 -- into a 1-dim vector
@@ -72,18 +82,22 @@ function train(shuffleddata)
       -- disp progress
       xlua.progress(t, trainData:size())
       -- create mini batch
-      local inputs = {}
-      local targets = {}
+      local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1), nfeats, height, width)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      if opt.type == 'double' then inputs = inputs:double()
+      elseif opt.type == 'cuda' then inputs = inputs:cuda() end
+      if opt.type == 'double' then targets = targets:double()
+      elseif opt.type == 'cuda' then targets = targets:cuda() end
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffleddata[i]]
          local target = trainData.labels[shuffleddata[i]][1]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
-         table.insert(inputs, input)
-         table.insert(targets, target)
+         inputs[i-t+1] = input
+         targets[i-t+1] = target
       end
-      -- targets = targets:squeeze(2)
+      targets = targets:squeeze(2)
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
@@ -96,7 +110,8 @@ function train(shuffleddata)
 
                         -- f is the average of all criterions
                         local f = 0
-                        for i = 1,#inputs do
+
+                        for i = 1,inputs:size(1) do
                           -- estimate f
                           local output = model:forward(inputs[i])
                           -- print(output:size())
@@ -106,10 +121,13 @@ function train(shuffleddata)
                           -- estimate df/dW
                           local df_do = criterion:backward(output, targets[i])
                           model:backward(inputs[i], df_do)
-
+                          
                           -- update confusion
+                          confusionBatch:add(output, targets[i])
                           confusion:add(output, targets[i])
 
+                          correct = correct or 0
+                          wrong = wrong or 0
                           local maxind,maxpred
                           maxind = 1 maxpred = output[1]
                           for j=2,output:size(1) do
@@ -118,18 +136,16 @@ function train(shuffleddata)
                                  maxind = j
                               end
                           end
-                          
-                          -- print(maxind,targets[i],maxind==targets[i])
-                          -- if (maxind==targets[i]) then
-                          --    correct = correct+1
-                          -- else
-                          --    wrong = wrong+1
-                          -- end
+                          if (maxind==targets[i]) then
+                             correct = correct+1
+                          else
+                             wrong = wrong+1
+                          end
                        end
 
                         -- normalize gradients and f(X)
-                        gradParameters:div(#inputs)
-                        f = f/#inputs
+                        gradParameters:div(inputs:size(1))
+                        f = f/inputs:size(1)
                         -- return f and df/dX
                         return f,gradParameters
                     end
@@ -149,14 +165,14 @@ function train(shuffleddata)
 
    -- print confusion matrix
    -- print(confusion)
-   confusion:updateValids()
-   print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-   print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-   print('global correct: ' .. (confusion.totalValid*100) .. '%')
-   -- print("correct and wrong "..correct..' '..wrong)
+   confusionBatch:updateValids()
+   print('average row correct: ' .. (confusionBatch.averageValid*100) .. '%')
+   print('average rowUcol correct (VOC measure): ' .. (confusionBatch.averageUnionValid*100) .. '%')
+   print('global correct: ' .. (confusionBatch.totalValid*100) .. '%')
+   print("correct and wrong "..correct..' '..wrong)
 
    -- update logger/plot
-   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
+   trainLogger:add{['% mean class accuracy (train set)'] = confusionBatch.totalValid * 100}
    if opt.plot then
       trainLogger:style{['% mean class accuracy (train set)'] = '-'}
       trainLogger:plot()
@@ -169,6 +185,7 @@ function train(shuffleddata)
    torch.save(filename, model)
 
    -- next epoch
-   confusion:zero()
+   confusionBatch:zero()
+   correct = 0 wrong = 0
    epoch = epoch + 1
 end

@@ -7,7 +7,7 @@ require 'loss'
 -- require 'train'
 require 'test'
 ----------------------------------------------------------------------
-print(" ==> testing")
+print("==> testing")
 
 if not opt.scpfile then
     error("Please specify a file containing the data with -scpfile")
@@ -17,11 +17,12 @@ elseif io.open(opt.scpfile,"rb") == nil then
     return
 end
 
-local trainfbankfilelist = opt.scpfile
-local listfile = io.open(trainfbankfilelist, 'r')
+readLabel(opt.labelfile)
+local testfbankfilelist = opt.scpfile
+local listfile = io.open(testfbankfilelist, 'r')
 while (true) do
-    testData = readData(listfile)
-    if (testData:size()>0) then
+    testData = readDataScp2(listfile,1)
+    if (testData~=nil) then
         test()
     else
         break
