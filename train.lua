@@ -83,7 +83,7 @@ function train(shuffleddata)
       xlua.progress(t, trainData:size())
       -- create mini batch
       local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1), nfeats, height, width)
-      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1))
       if opt.type == 'double' then inputs = inputs:double()
       elseif opt.type == 'cuda' then inputs = inputs:cuda() end
       if opt.type == 'double' then targets = targets:double()
@@ -91,14 +91,14 @@ function train(shuffleddata)
       for i = t,math.min(t+opt.batchSize-1,trainData:size()) do
          -- load new sample
          local input = trainData.data[shuffleddata[i]]
-         local target = trainData.labels[shuffleddata[i]][1]
+         local target = trainData.labels[shuffleddata[i]]
          if opt.type == 'double' then input = input:double()
          elseif opt.type == 'cuda' then input = input:cuda() end
          inputs[i-t+1] = input
          targets[i-t+1] = target
       end
-      targets = targets:squeeze(2)
-      
+      -- targets = targets:squeeze(2)
+
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
                         -- get new parameters
