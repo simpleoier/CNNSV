@@ -15,9 +15,10 @@ if not (opt) then
     -- filelist:
     cmd:option('-featfile', '', 'name a file storing all the filenames of data')
     cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
-    cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
+    cmd:option('-scpfile', '', 'name a file storing all the filenames of train or test data')
     cmd:option('-filenum', 20, 'max nb of fbank file each time')
     cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
+    cmd:option('-cvscpfile','', 'name a file storing all the filenames of cv data')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 4, 'number of threads')
@@ -34,7 +35,7 @@ if not (opt) then
     cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
-    cmd:option('-learningRate', 1, 'learning rate at t=0')
+    cmd:option('-learningRate', 2, 'learning rate at t=0')
     cmd:option('-batchSize', 10, 'mini-batch size (1 = pure stochastic)')
     cmd:option('-weightDecay', 0, 'weight decay (SGD only)')
     cmd:option('-momentum', 0.7, 'momentum (SGD only)')
@@ -61,14 +62,20 @@ torch.manualSeed(opt.seed)
 print '==> define parameters'
 -- hidden units (for creating new model or loading model from binary)
 nstates = {1024,1024,1024,1024}
+filtsizew = 11
+filtsizeh = 3
+poolsize = 2
 -- number of units in output layer, but meaningless in loading model from binary file
 noutputs = 203
 -- number of frame extension to each direction
 frameExt = 5
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
 nfeats = 3
-width = 40
+width = 40 
 height = 2*frameExt+1
 ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
+-- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
+height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
+width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)

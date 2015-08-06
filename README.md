@@ -4,6 +4,7 @@ Training
 th trainmain.lua -scpfile fbanklist -modelPara sampleModelParameters(train)
 
 Test
-th testmain.lua  -scpfile fbanklist -modelPara sampleModelParameters(test)
+th testdoall.lua  -scpfile fbanklist -modelPara sampleModelParameters(test)
 
 #on gauss the location of torch is /slfs1/users/xkc09/TOOLS/torch/install/bin/th
+

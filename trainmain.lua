@@ -34,8 +34,8 @@ end
 
 function mainscp()
     readLabel(opt.labelfile)
-    local trainfbankfilelist = opt.scpfile
-    local listfile = io.open(trainfbankfilelist, 'r')
+    local trainfeatfilelist = opt.scpfile
+    local listfile = io.open(trainfeatfilelist, 'r')
     while (true) do
         trainData = readDataScp2(listfile,opt.filenum)
         if (trainData~=nil) then
@@ -53,6 +53,31 @@ function mainscp()
     print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
     print('global correct: ' .. (confusion.totalValid*100) .. '%')
+
+    -- cross validation
+    if (opt.cvscpfile~='') then
+        print("\n==> cross validation")
+        confusion:zero()
+        local cvfeatfilelist = opt.cvscpfile
+        local listfile = io.open(cvfeatfilelist, 'r')
+        while (true) do
+            cvData = readDataScp2(listfile,opt.filenum)
+            if (cvData~=nil) then
+                crossValidate()
+            else
+                break
+            end
+            collectgarbage()
+        end
+        listfile:close()
+
+        confusion:updateValids()
+        print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+        print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+        print('global correct: ' .. (confusion.totalValid*100) .. '%')
+        print('global correct: ' .. (confusion.totalValid*100) .. '%')
+    end
+
 end
 
 -- Check if the scpfile argument is given and the scpfile can be found
