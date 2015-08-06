@@ -1,6 +1,7 @@
 print '==> executing all'
 
 require 'init'
+require 'libpreparedata'
 require 'data'
 require 'model'
 require 'loss'
@@ -34,10 +35,14 @@ end
 
 function mainscp()
     readLabel(opt.labelfile)
+    local means, variances
+    if (opt.globalnorm~='') then
+        means, variances = readglobalnorm(opt.globalnorm)
+    end
     local trainfeatfilelist = opt.scpfile
     local listfile = io.open(trainfeatfilelist, 'r')
     while (true) do
-        trainData = readDataScp2(listfile,opt.filenum)
+        trainData = readDataScp2(listfile, opt.filenum, means, variances)
         if (trainData~=nil) then
             local shuffleddata = torch.randperm(trainData:size())
             train(shuffleddata)

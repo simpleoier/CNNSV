@@ -107,7 +107,7 @@ end
 --    return Data
 -- end
 
-function readDataScp2(listfile,filenum)
+function readDataScp2(listfile,filenum,means,variances)
    local feats = {}
    local labels = {}
    local curlinenum = 0
@@ -138,8 +138,14 @@ function readDataScp2(listfile,filenum)
    -- print(labels)
    local tdata = torch.Tensor(#feats, feats[1]:size(1))
    local tlabels = torch.Tensor(labels)
+   if (opt.globalnorm~='') then
+      print(means:type())
+   end
    for i=1,#feats do
       tdata[i] = feats[i]
+      if (opt.globalnorm~='') then
+         tdata[i]:map2(means, variances, function(data,mean,variance) return (data+mean)*variance end)
+      end
    end
    
    local Data = {
@@ -147,5 +153,8 @@ function readDataScp2(listfile,filenum)
       labels = tlabels,
       size = function() return #feats end
    }
+   print(tdata[1][1])
+   print(tdata[2][1])
+   print(tdata[#feats][1])
    return Data
 end

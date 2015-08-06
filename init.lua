@@ -17,8 +17,9 @@ if not (opt) then
     cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
     cmd:option('-scpfile', '', 'name a file storing all the filenames of train or test data')
     cmd:option('-filenum', 20, 'max nb of fbank file each time')
-    cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
-    cmd:option('-cvscpfile','', 'name a file storing all the filenames of cv data')
+    cmd:option('-labelfile', '', 'name a file storing the labels for each file in scp')
+    cmd:option('-cvscpfile', '', 'name a file storing all the filenames of cv data')
+    cmd:option('-globalnorm', '', 'normalization file contains the means and variances')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 4, 'number of threads')
