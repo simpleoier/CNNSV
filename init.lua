@@ -1,7 +1,7 @@
 require 'torch'   -- torch
 require 'os'   --
 require 'nn'      -- provides a normalization operator
-require 'cunn'
+-- require 'cunn'
 require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
 require "libhtktoth"
