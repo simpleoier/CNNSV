@@ -1,2 +1,0 @@
-/usr/bin/ar cr libchtk.a  CMakeFiles/chtk-static.dir/chtk.cpp.o
-/usr/bin/ranlib libchtk.a
