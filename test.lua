@@ -71,10 +71,10 @@ function test()
          -- print confusion matrix
       -- print(confusion)
       -- confusion:__tostring__()
-      confusion:updateValids()
-      print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-      print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-      print('global correct: ' .. (confusion.totalValid*100) .. '%')
+      confusionBatch:updateValids()
+      print('average row correct: ' .. (confusionBatch.averageValid*100) .. '%')
+      print('average rowUcol correct (VOC measure): ' .. (confusionBatch.averageUnionValid*100) .. '%')
+      print('global correct: ' .. (confusionBatch.totalValid*100) .. '%')
       print("correct and wrong "..correct..' '..wrong)
 
       -- update log/plot
