@@ -135,16 +135,17 @@ function readDataScp2(listfile,filenum,means,variances)
    if (#feats==0) then
       return
    end
-   -- print(labels)
-   local tdata = torch.Tensor(#feats, feats[1]:size(1))
+
    local tlabels = torch.Tensor(labels)
+   local tdata = torch.Tensor(#feats, feats[1]:size(1))
    for i=1,#feats do
       tdata[i] = feats[i]
-      -- normlize if globalnorm exists, T norm is defined as (data-means)/variance
       if (opt.globalnorm~='') then
          tdata[i]:map2(means, variances, function(data,mean,variance) return (data+mean)*variance end)
       end
    end
+   local tdata = nn.Reshape(#feats, height, nfeats, width):forward(tdata)
+   tdata = tdata:transpose(2,3)
    
    local Data = {
       data = tdata,

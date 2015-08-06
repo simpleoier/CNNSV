@@ -26,7 +26,7 @@ if not (opt) then
     -- data:
     cmd:option('-size', 'full', 'how many samples do we load: small | full | extra')
     -- model:
-    cmd:option('-model', 'deepneunet', 'type of model to construct: linear | mlp | convnet | deepneunet')
+    cmd:option('-model', 'convnet', 'type of model to construct: linear | mlp | convnet | deepneunet')
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
     cmd:option('-hidlaynb', 0, 'nb of hidden layers')
@@ -62,7 +62,7 @@ torch.manualSeed(opt.seed)
 
 print '==> define parameters'
 -- hidden units (for creating new model or loading model from binary)
-nstates = {1024,1024,1024,1024}
+nstates = {128,256,1024,1024}
 filtsizew = 11
 filtsizeh = 3
 poolsize = 2
