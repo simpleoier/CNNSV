@@ -15,9 +15,10 @@ if not (opt) then
     -- filelist:
     cmd:option('-featfile', '', 'name a file storing all the filenames of data')
     cmd:option('-maxrows', 4000, 'max number of rows to be read from fbank file each time')
-    cmd:option('-scpfile', '', 'name a file storing all the filenames of data')
+    cmd:option('-scpfile', '', 'name a file storing all the filenames of train or test data')
     cmd:option('-filenum', 20, 'max nb of fbank file each time')
     cmd:option('-labelfile','', 'name a file storing the labels for each file in scp')
+    cmd:option('-cvscpfile','', 'name a file storing all the filenames of cv data')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 4, 'number of threads')
@@ -41,7 +42,6 @@ if not (opt) then
     cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
     cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
-    cmd:option('-crossvalid', 0, 'use test for cross validaton set which do not extract bottleneck feature and compute the accuracy,0 is false, 1 is true')
     cmd:text()
     opt = cmd:parse(arg or {})
 end

@@ -188,3 +188,61 @@ function train(shuffleddata)
    correct = 0 wrong = 0
    epoch = epoch + 1
 end
+
+function crossValidate()
+   -- local vars
+   local time = sys.clock()
+
+   -- averaged param use?
+   if average then
+      cachedparams = parameters:clone()
+      parameters:copy(average)
+   end
+
+   -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
+   model:evaluate()
+
+   local inputs = cvData.data
+   local targets = cvData.labels
+
+   if opt.type == 'double' then inputs = inputs:double()
+   elseif opt.type == 'cuda' then inputs = inputs:cuda() end
+
+   setnum = setnum or 0
+   setnum = setnum + 1
+   -- test over test data
+   print('==> testing on test set'..setnum)
+
+   local preds = model:forward(inputs)
+   correct = correct or 0
+   wrong = wrong or 0
+   for i=1,inputs:size(1) do
+      local maxindex,maxpred
+      maxindex = 1
+      maxpred = preds[i][1]
+      for j=2,preds:size(2) do
+         if preds[i][j]>maxpred then
+            maxpred = preds[i][j]
+            maxindex = j
+         end
+      end
+      if (maxindex==targets[i]) then
+         correct = correct+1
+      else
+         wrong = wrong+1
+      end
+   end
+   confusion:batchAdd(preds, targets)
+
+   -- timing
+   time = sys.clock() - time
+   time = time / cvData:size()
+   print("==> time to test 1 sample = " .. (time*1000) .. 'ms'..'\n')
+
+   -- averaged param use?
+   if average then
+      -- restore parameters
+      parameters:copy(cachedparams)
+   end
+
+end
