@@ -1,3 +1,7 @@
+
+require "libhtktoth"
+require "nn"
+
 -- th preparedata scpfile globalnorm mlffile outputdir
 --require 'torch'
 function readmlf(filename)
@@ -25,117 +29,119 @@ end
 function readglobaltransf(filename)
 
    fin = io.open(filename,'r')
-   line = fin:read()
-   line = fin:read()
-   -- First read in the biases of the transforms, which are useless
-   -- dim_bias = tonumber(line:split(' ')[2])
-   line = fin:read()
-   meansstr = line:split(' ')
-   means = {}
+   local line = fin:read()
+   local line = fin:read()
+-- First read in the biases of the transforms, which are useless
+-- dim_bias = tonumber(line:split(' ')[2])
+-- SOme of the transfiles do not have a linebreak
+   local meansstr = {}
+   -- transform file was written so that there is no linebreak after the first line
+   if((#(line:split(' ')) > 2)) then
+      local linesplit = line:split(' ')
+      for i=4,#linesplit do
+         meansstr[#meansstr+1] = linesplit[i]
+      end
+   -- Linebreak after the "v XXXXX" line
+   else
+      line = fin:read()
+      meansstr = line:split(' ')
+   end
+   means = torch.FloatTensor(#meansstr)
    -- Convert all the means to a number
    for i = 1,#meansstr do
       means[i] = tonumber(meansstr[i])
    end
-   line = fin:read()
+   local line = fin:read()
    line = fin:read()
    -- dim_window is the dimension of the input vector to the dnn
    dim_window = tonumber(line:split(' ')[2])
+
    line = fin:read()
-   line = fin:read()
-   windowstr = line:split(' ')
-   window = {}
+
+   local windowstr = {}
+   -- We assume having no new line here once again
+   if((#(line:split(' ')) > 2))then
+      local linesplit = line:split(' ')
+      for i=4,#linesplit do
+         windowstr[#windowstr+1] = linesplit[i]
+      end
+   else
+      -- One blank line
+      local line = fin:read()
+      -- Now we got the features
+      windowstr = line:split(' ')
+   end
+   window = torch.FloatTensor(#windowstr)
    -- Reading in the 1/sigma aka variances
    for i = 1,#windowstr do
       window[i] = tonumber(windowstr[i])
    end
+   assert(means:size(1) == window:size(1),"Error when loading the global.trans file, meansize "..means:size(1).." does not match variance size ".. window:size(1))
    fin:close()
 end
 
-function readfile(inputfile)
-   fin = io.open(inputfile,'r')
-   assert(fin)
-   line = fin:read()
-   line = fin:read()
-   frame = {}
-   field = {}
-   en = true
-   while (en) do
-      s = string.find(line,':')
-      framenum = tonumber(string.sub(line,1,s-1))
-      line = string.sub(line,s+1)
-      local ss = ''
-      repeat
-         ss = ss..' '..string.gsub(line, "^%s*(.-)%s*$", "%1")
-         line = fin:read()
-         if (line) then
-            s,e = string.find(line, ":") or string.find(line, "END")
-            if (string.find(line, "END")~=nil) then
-               en = false
-            end
-         else
-            break;
-         end
-      until s~=nil
-      local field = parseline(ss)
-      frame[framenum+1] = field
-      if not (line) then
-         break
-      end
+function readfile(inputfile,extframe)
+   fin = assert(io.open(inputfile,'r'))
+   local htkfeat = loadhtk(inputfile,extframe)
+   local featheader = loadheader(inputfile)
+   dim_feat = htkfeat:size(2)
+   if (dim_feat ~= means:size(1)) then
+      print("Feature dimension "..dim_feat.." does not match globalnorm dimension "..means:size(1))
    end
-   dim_fea = #frame[1]
-   if (dim_fea*11~=#means) then
-      print("Feature dimension "..dim_fea.." does not match globalnorm dimension "..#means)
-   end
-   return frame
+   return htkfeat,featheader
 end
+
 
 -- Writes out the outputfile and normalizes its frames with T-norm
-function writefile(outputfile, frame,extframe)
-   -- Open out the outputfile
-   fout = io.open(outputfile,'w')
+function writefile(outputfile, frame, extframe,htkheader)
    -- Default is 5 frames left and right
-   extframe = extframe or 5
-   t = {}
-   -- Concatenate the frames to one large string
-   for i=1,#frame do
-      for j = 1,#frame[i] do
-         t[#t+1] = frame[i][j]
-      end
-   end
-   chunk = outputfile:split('/')
-   chunk = chunk[#chunk]
-   chunk = chunk:split('_')
-   lab = chunk[1]..'_'..chunk[2]
-   --We extend the frame window left and right by extframe frames
-   for i=1,#frame-(2*extframe) do
-      fout:write(label[lab]..' ')
-      ss = ''
-      -- Apply T-Norm here, T-Norm is defined as:
-      -- ss = (ss_old - mu)/cov
-      for j=1, #means do
-         ss = ss..(t[j+dim_fea*(i-1)]+means[j])*window[j]..' '
-      end
-      -- add the newline
-      ss = ss..'\n'
-      fout:write(ss)
-   end
-   fout:close()
+   local out_feat = {}
+   -- setn(out_feat,n_frames * #means)
+   local nsamples = frame:size(1)
+   --We extend the frame window left and right by nextframe frames
+   local nextframes= frame:size(2)
+   local m = nn.Replicate(nsamples)
+   -- We use replicate to extend the window size to use the map function (size needs to be equal)
+   -- Replicate does not have any extra cost, only resets the stride parameter once we did iterate
+   -- Already once over a certain tensor
+   local means = m:forward(means)
+   local window = m:forward(window)
+
+   -- Apply T-Norm here, T-Norm is defined as:
+   -- ss = (ss_old - mu)/cov
+   frame:map2(means,window,function(old_frame,mean,cov) return (old_frame+mean)*cov end)
+   -- print("Spend " .. te-ts.. "s in normalization")
+   -- frame:map2(windows,means)
+   out_feat = torch.totable(frame:resize(nsamples*nextframes))
+
+   local newsamplesize = htkheader.nsamples*(2*extframe) + htkheader.nsamples
+   -- Remove the crc checksum ...
+   local newparmkind = string.gsub(htkheader.parmkind,"_K","")
+
+   writehtk(outputfile,newsamplesize,htkheader.sampleperiod,htkheader.samplesize/4,newparmkind,out_feat)
 end
 
-if #arg ~= 4 then
+if #arg < 4 then
    print ("Please use the following syntax:")
-   print ("th preparedata.lua scpfile globaltransf mlffile outputfile")
+   print ("th preparedata.lua scpfile globaltransf mlffile outputdir ext_frame(optional)")
    return
 end
 
 readmlf(arg[3])
 readglobaltransf(arg[2])
-finscp = io.open(arg[1],'r')
+finscp = assert(io.open(arg[1],'r'))
+-- Define ext_frame as 5 by default, if any argument is given
+ext_frame = arg[5] or 5
 for line in finscp:lines() do
+   ts = sys.clock()
    line = string.gsub(line, "^%s*(.-)%s*$", "%1")
-   frame = readfile(line)
+   frame,htkheader = readfile(line,ext_frame)
    filename = line:split('/')
    filename = filename[#filename]
-   filename = filename:split('%.')[1]
-   writefile(arg[4]..filename,frame)
+   filename = filename:split('%.')
+   feat_name = filename[1]
+   feat_extension = filename[2]
+   writefile(arg[4]..feat_name.."."..feat_extension,frame,ext_frame,htkheader)
+   te = sys.clock()
+   print("Writing file "..arg[4]..feat_name.."."..feat_extension .. " took "..te-ts.. "s")
 end
