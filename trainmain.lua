@@ -40,25 +40,25 @@ function mainscp()
         means, variances = readglobalnorm(opt.globalnorm)
     end
     if (opt.scpfile~='') then
-        local trainfeatfilelist = opt.scpfile
-        local listfile = io.open(trainfeatfilelist, 'r')
-        while (true) do
+    	local trainfeatfilelist = opt.scpfile
+    	local listfile = io.open(trainfeatfilelist, 'r')
+    	while (true) do
             trainData = readDataScp2(listfile, opt.filenum, means, variances)
             if (trainData~=nil) then
-                local shuffleddata = torch.randperm(trainData:size())
-                train(shuffleddata)
+            	local shuffleddata = torch.randperm(trainData:size())
+            	train(shuffleddata)
             else
-                break
+            	break
             end
             collectgarbage()
         end
-        listfile:close()
+    	listfile:close()
 
-        print('==> final results')
-        confusion:updateValids()
-        print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-        print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-        print('global correct: ' .. (confusion.totalValid*100) .. '%')
+    	print('==> final results')
+    	confusion:updateValids()
+    	print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    	print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    	print('global correct: ' .. (confusion.totalValid*100) .. '%')
     end
 
     -- cross validation
@@ -88,16 +88,11 @@ function mainscp()
 end
 
 -- Check if the scpfile argument is given and the scpfile can be found
-if (not opt.scpfile) and (not opt.featfile) then
+if (opt.scpfile=='') and (opt.featfile=='') and (opt.cvscpfile=='') then
     error("Please specify a file containing the data with -scpfile or Please specify a file containing the data with -fbankfile")
     return
-elseif (opt.scpfile~='') then
-    if io.open(opt.scpfile,"rb") == nil then
-        error(string.format("Given scp file %s cannot be found!",opt.scpfile))
-        return
-    else
+elseif (opt.scpfile~='' or opt.cvscpfile~='') then
         mainscp()
-    end
 elseif (opt.featfile~='') then
     if io.open(opt.featfile,"rb") == nil then
         error(string.format("Given feature file %s cannot be found!",opt.featfile))
