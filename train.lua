@@ -87,7 +87,7 @@ function train(shuffleddata)
       -- local inputs = trainData.data:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
       -- local targets = trainData.labels:narrow(1, t, math.min(opt.batchSize,trainData:size()-t+1))
       local inputs = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),ninputs)
-      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1),1)
+      local targets = torch.Tensor(math.min(opt.batchSize,trainData:size()-t+1))
       if opt.type == 'double' then inputs = inputs:double()
       elseif opt.type == 'cuda' then inputs = inputs:cuda() end
       if opt.type == 'double' then targets = targets:double()
@@ -101,7 +101,7 @@ function train(shuffleddata)
          inputs[i-t+1] = input
          targets[i-t+1] = target
       end
-      targets = targets:squeeze(2)
+      -- targets = targets:squeeze(2)
 
       local feval = function(x)
                         -- get new parameters

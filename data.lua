@@ -134,10 +134,9 @@ function readDataScp2(listfile,filenum)
    end
    -- print(labels)
    local tdata = torch.Tensor(#feats, feats[1]:size(1))
-   local tlabels = torch.Tensor(#labels,1)
+   local tlabels = torch.Tensor(labels)
    for i=1,#feats do
       tdata[i] = feats[i]
-      tlabels[i] = labels[i]
    end
    local Data = {
       data = tdata,
