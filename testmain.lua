@@ -30,3 +30,10 @@ while (true) do
     collectgarbage()
 end
 listfile:close()
+
+if (opt.crossvalid==1) then
+    confusion:updateValids()
+    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+end
