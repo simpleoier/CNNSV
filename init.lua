@@ -31,7 +31,7 @@ if not (opt) then
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
-    cmd:option('-save', '../DNNresults', 'subdirectory to save/log experiments in')
+    cmd:option('-save', 'results', 'subdirectory to save/log experiments in')
     cmd:option('-plot', false, 'live plot')
     cmd:option('-optimization', 'SGD', 'optimization method: SGD | ASGD | CG | LBFGS')
     cmd:option('-learningRate', 2, 'learning rate at t=0')
@@ -41,6 +41,7 @@ if not (opt) then
     cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
     cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
+    cmd:option('-crossvalid', 0, 'use test for cross validaton set which do not extract bottleneck feature and compute the accuracy,0 is false, 1 is true')
     cmd:text()
     opt = cmd:parse(arg or {})
 end
