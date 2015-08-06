@@ -39,25 +39,27 @@ function mainscp()
     if (opt.globalnorm~='') then
         means, variances = readglobalnorm(opt.globalnorm)
     end
-    local trainfeatfilelist = opt.scpfile
-    local listfile = io.open(trainfeatfilelist, 'r')
-    while (true) do
-        trainData = readDataScp2(listfile, opt.filenum, means, variances)
-        if (trainData~=nil) then
-            local shuffleddata = torch.randperm(trainData:size())
-            train(shuffleddata)
-        else
-            break
+    if (opt.scpfile~='') then
+        local trainfeatfilelist = opt.scpfile
+        local listfile = io.open(trainfeatfilelist, 'r')
+        while (true) do
+            trainData = readDataScp2(listfile, opt.filenum, means, variances)
+            if (trainData~=nil) then
+                local shuffleddata = torch.randperm(trainData:size())
+                train(shuffleddata)
+            else
+                break
+            end
+            collectgarbage()
         end
-        collectgarbage()
-    end
-    listfile:close()
+        listfile:close()
 
-    print('==> final results')
-    confusion:updateValids()
-    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
-    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
-    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+        print('==> final results')
+        confusion:updateValids()
+        print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+        print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+        print('global correct: ' .. (confusion.totalValid*100) .. '%')
+    end
 
     -- cross validation
     if (opt.cvscpfile~='') then
