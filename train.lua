@@ -105,53 +105,53 @@ function train(shuffleddata)
 
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
-                        -- get new parameters
-                        if x ~= parameters then
-                           parameters:copy(x)
-                        end
+            -- get new parameters
+            if x ~= parameters then
+               parameters:copy(x)
+            end
 
-                        -- reset gradients
-                        gradParameters:zero()
+            -- reset gradients
+            gradParameters:zero()
 
-                        -- f is the average of all criterions
-                        local f = 0
+            -- f is the average of all criterions
+            local f = 0
 
-                        local outputs = model:forward(inputs)
-                        local err = criterion:forward(outputs, targets)
-                        f = f + err
+            local outputs = model:forward(inputs)
+            local err = criterion:forward(outputs, targets)
+            f = f + err
 
-                        -- estimate df/dW
-                        local df_do = criterion:backward(outputs, targets)
-                        model:backward(inputs, df_do)
-                        -- update confusion
-                        confusionBatch:batchAdd(outputs, targets)
-                        confusion:batchAdd(outputs, targets)
+            -- estimate df/dW
+            local df_do = criterion:backward(outputs, targets)
+            model:backward(inputs, df_do)
+            -- update confusion
+            confusionBatch:batchAdd(outputs, targets)
+            confusion:batchAdd(outputs, targets)
 
-                        correct = correct or 0
-                        wrong = wrong or 0
-                        for i=1,inputs:size(1) do
-                           local maxindex,maxpred
-                           maxindex = 1
-                           maxpred = outputs[i][1]
-                           for j=2,outputs:size(2) do
-                              if outputs[i][j]>maxpred then
-                                 maxpred = outputs[i][j]
-                                 maxindex = j
-                              end
-                           end
-                           if (maxindex==targets[i]) then
-                              correct = correct+1
-                           else
-                              wrong = wrong+1
-                           end
-                        end
+            correct = correct or 0
+            wrong = wrong or 0
+            for i=1,inputs:size(1) do
+               local maxindex,maxpred
+               maxindex = 1
+               maxpred = outputs[i][1]
+               for j=2,outputs:size(2) do
+                  if outputs[i][j]>maxpred then
+                     maxpred = outputs[i][j]
+                     maxindex = j
+                  end
+               end
+               if (maxindex==targets[i]) then
+                  correct = correct+1
+               else
+                  wrong = wrong+1
+               end
+            end
 
-                        -- normalize gradients and f(X)
-                        gradParameters:div(inputs:size(1))
-                        f = f/inputs:size(1)
-                        -- return f and df/dX
-                        return f,gradParameters
-                    end
+            -- normalize gradients and f(X)
+            gradParameters:div(inputs:size(1))
+            f = f/inputs:size(1)
+            -- return f and df/dX
+            return f,gradParameters
+      end
 
       -- optimize on current mini-batch
       if optimMethod == optim.asgd then

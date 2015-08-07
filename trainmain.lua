@@ -1,9 +1,9 @@
 print '==> executing all'
 
+-- Parses the input arguments and sets the variables for the model and certain other variables such as:
+-- model : The Neural network model
+-- opt : The parsed arguments from the command line
 require 'init'
-require 'libpreparedata'
-require 'data'
-require 'model'
 require 'loss'
 require 'train'
 -- dofile 'test.lua'

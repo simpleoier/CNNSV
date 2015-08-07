@@ -118,13 +118,14 @@ function readDataScp2(listfile,filenum,means,variances)
          filename = paths.basename(line)
          local chunk = filename:split('_')
          print("Reading feature from "..line)
+         assert(io.open(line),"File " .. line .. " does not exist!")
          local feat = loadhtk(line, frameExt)
          for i=1,feat:size(1) do
             feats[#feats+1] = feat[i]
             if (nlabels~=0) then
                labels[#feats] = filelabel[chunk[1]]
             else
-               labels[#feats] = 0
+               labels[#feats] = 1
             end
          end
       else
@@ -145,7 +146,7 @@ function readDataScp2(listfile,filenum,means,variances)
          tdata[i]:map2(means, variances, function(data,mean,variance) return (data+mean)*variance end)
       end
    end
-   
+
    local Data = {
       data = tdata,
       labels = tlabels,

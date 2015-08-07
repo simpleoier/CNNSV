@@ -6,6 +6,10 @@ require 'xlua'    -- xlua provides useful tools, like progress bars
 require 'optim'   -- an optimization package, for online and batch methods
 require "libhtktoth"
 
+require 'libpreparedata'
+require 'data'
+require 'model'
+
 if not (opt) then
     cmd = torch.CmdLine()
     cmd:text()
@@ -71,8 +75,10 @@ noutputs = 203
 -- number of frame extension to each direction
 frameExt = 5
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
+
+-- CNN only paramters
 nfeats = 3
-width = 40 
+width = 40
 height = 2*frameExt+1
 ninputs = nfeats*width*height
 -- number of hidden units (for MLP only):
@@ -80,3 +86,18 @@ nhiddens = ninputs / 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
+
+
+
+
+if (opt.modelPara~='') then
+    modelfromparameterfile()
+else
+    local filename = paths.concat(opt.save, opt.ldmodel)
+    model = io.open(filename, 'rb')
+    if (model)then
+        loadmodelfromfile(filename)
+    else
+        newmodel()
+    end
+end
