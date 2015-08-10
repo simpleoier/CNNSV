@@ -34,6 +34,9 @@ if not (opt) then
     cmd:option('-ldmodel', 'model.net', 'name of the model to be loaded')
     cmd:option('-modelPara', '', 'model file which stores pretrained weights and bias format as DNN fintune')
     cmd:option('-hidlaynb', 0, 'nb of hidden layers')
+    cmd:option('-noutputs',0,'nb of output neurons')
+    cmd:option('-inputdim',0,'nb of the single input')
+    cmd:option('-fext',5,'nb of frames which will be extended')
     -- loss:
     cmd:option('-loss', 'nll', 'type of loss function to minimize: nll | mse | margin')
     -- training:
@@ -64,6 +67,9 @@ end
 torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 
+assert(opt.noutputs ~= 0,"Please define a number of outputs with -noutputs")
+assert(opt.inputdim ~= 0,"Please define the (static) dimension of inputs with -inputdim")
+
 print '==> define parameters'
 -- hidden units (for creating new model or loading model from binary)
 nstates = {1024,1024,1024,1024}
@@ -71,16 +77,15 @@ filtsizew = 11
 filtsizeh = 3
 poolsize = 2
 -- number of units in output layer, but meaningless in loading model from binary file
-noutputs = 203
+noutputs = opt.noutputs
 -- number of frame extension to each direction
-frameExt = 5
+frameExt = opt.fext
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
 
--- CNN only paramters
-nfeats = 3
-width = 40
+-- nfeats = 3
+width = opt.inputdim
 height = 2*frameExt+1
-ninputs = nfeats*width*height
+ninputs = width*height
 -- number of hidden units (for MLP only):
 nhiddens = ninputs / 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
