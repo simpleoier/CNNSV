@@ -1,5 +1,3 @@
-package.path = '/slfs1/users/hedi7/asr/CNNSV/torchTest/?.lua;' .. package.path
-
 require "init"
 
 

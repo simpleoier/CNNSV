@@ -1,6 +1,5 @@
 print '==> executing all'
 -- Extend the path so that this script can be used from other folders
-package.path = "/slfs1/users/hedi7/asr/CNNSV/torchTest/?.lua" .. package.path
 -- Parses the input arguments and sets the variables for the model and certain other variables such as:
 -- model : The Neural network model
 -- opt : The parsed arguments from the command line
