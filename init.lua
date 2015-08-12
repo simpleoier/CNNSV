@@ -9,7 +9,7 @@ require "libhtktoth"
 if not (opt) then
     cmd = torch.CmdLine()
     cmd:text()
-    cmd:text('Speaker Verification with DNN')
+    cmd:text('Speaker Verification with CNN')
     cmd:text()
     cmd:text('Options:')
     -- filelist:
@@ -20,6 +20,7 @@ if not (opt) then
     cmd:option('-labelfile', '', 'name a file storing the labels for each file in scp')
     cmd:option('-cvscpfile', '', 'name a file storing all the filenames of cv data')
     cmd:option('-globalnorm', '', 'normalization file contains the means and variances')
+    cmd:option('-tensorList', 'tensorList', 'data stored as torch tensor format')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 4, 'number of threads')
@@ -44,6 +45,9 @@ if not (opt) then
     cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
     cmd:option('-crossvalid', 0, 'use test for cross validaton set which do not extract bottleneck feature and compute the accuracy,0 is false, 1 is true')
+    -- testing:
+    cmd:option('-featOut', '', 'the location of the output feature')
+    cmd:option('-frameExt', 5, 'frame extension')
     cmd:text()
     opt = cmd:parse(arg or {})
 end
@@ -69,7 +73,7 @@ poolsize = 2
 -- number of units in output layer, but meaningless in loading model from binary file
 noutputs = 203
 -- number of frame extension to each direction
-frameExt = 5
+frameExt = opt.frameExt
 -- [Number of incorelated features], [Width and Height for each feature map(height is the extended frame)], [Number of units in input layer] (for creating new model only)
 nfeats = 3
 width = 40 
@@ -80,3 +84,19 @@ nhiddens = ninputs / 2
 -- number of hidden units for the output of Convolution and pooling layers(2 convolutional and pooling layers)
 height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poolsize)
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
+
+-- load data from torch format
+local filename = paths.concat(opt.save, opt.tensorList)
+tensorList = io.open(filename)
+if (tnesorList) then
+    print("find tensor list in "..filename)
+    tensorList:close()
+    readData = torch.load(filename)
+    tensorList = readData.list
+    cvind = readData.cvind
+else
+    print("can not find tensor list in "..filename)
+    tensorList = {}
+end
+
+print("learning rate = "..opt.learningRate, "frame extension = "..opt.frameExt)

@@ -152,5 +152,15 @@ function readDataScp2(listfile,filenum,means,variances)
       labels = tlabels,
       size = function() return #feats end
    }
+   tensorList = tensorList or {}
+   local num = #tensorList+1
+   local filename = paths.concat(opt.save, "features/"..num)
+   tensorList[#tensorList+1] = filename
+   torch.save(filename, Data)
+   return Data
+end
+
+function readDataTensor(filename)
+   Data = torch.load(filename)
    return Data
 end

@@ -59,7 +59,10 @@ function mainscp()
     	print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     	print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
     	print('global correct: ' .. (confusion.totalValid*100) .. '%')
+	local filename = paths.concat(opt.save,"trainlist")
+	torch.save(filename, tensorList)
     end
+    local index = #tensorList
 
     -- cross validation
     if (opt.cvscpfile~='') then
@@ -84,15 +87,47 @@ function mainscp()
         print('global correct: ' .. (confusion.totalValid*100) .. '%')
         print('global correct: ' .. (confusion.totalValid*100) .. '%')
     end
-
+    local filename = paths.concat(opt.save,"trainlist")
+    local tensorf = {
+	list = tensorList,
+	cvind = index
+    }
+    torch.save(filename, tensorf)
 end
 
+function mainTensor()
+    cvind = cvind or 0
+    for i=1,cvind do
+	trainData = readDataTensor(tensorList[i])
+	local shuffleddata = torch.randperm(trainData:size())
+	train(shuffleddata)
+    end
+    print('==> final results')
+    confusion:updateValids()
+    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+    
+    print("\n==> cross validation")
+    confusion:zero()
+    for i=cvind+1,#tensorList do
+	cvData = readDataTensor(tensorList[i])
+	crossValidate()
+    end
+    print('==> final results')
+    confusion:updateValids()
+    print('average row correct: ' .. (confusion.averageValid*100) .. '%')
+    print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
+    print('global correct: ' .. (confusion.totalValid*100) .. '%')
+end
 -- Check if the scpfile argument is given and the scpfile can be found
-if (opt.scpfile=='') and (opt.featfile=='') and (opt.cvscpfile=='') then
+if (opt.scpfile=='') and (opt.featfile=='') and (opt.cvscpfile=='') and (tensorList=={}) then
     error("Please specify a file containing the data with -scpfile or Please specify a file containing the data with -fbankfile")
     return
+elseif (#tensorList~=0) then
+    mainTensor()
 elseif (opt.scpfile~='' or opt.cvscpfile~='') then
-        mainscp()
+    mainscp()
 elseif (opt.featfile~='') then
     if io.open(opt.featfile,"rb") == nil then
         error(string.format("Given feature file %s cannot be found!",opt.featfile))
