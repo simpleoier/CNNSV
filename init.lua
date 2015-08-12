@@ -109,7 +109,7 @@ else
     tensorList = {}
 end
 
-print("learning rate = "..opt.learningRate, "frame extension = "..opt.frameExt)
+print("learning rate = "..opt.learningRate, "frame extension = "..opt.fext)
 
 if (opt.modelPara~='') then
     modelfromparameterfile()
