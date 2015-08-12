@@ -1,13 +1,11 @@
 print '==> executing all'
-
+-- Extend the path so that this script can be used from other folders
+-- Parses the input arguments and sets the variables for the model and certain other variables such as:
+-- model : The Neural network model
+-- opt : The parsed arguments from the command line
 require 'init'
-require 'libpreparedata'
-require 'data'
-require 'model'
 require 'loss'
 require 'train'
--- dofile 'test.lua'
-
 ----------------------------------------------------------------------
 print '==> training!'
 
@@ -34,16 +32,21 @@ function mainfeat()
 end
 
 function mainscp()
+    -- reading labels from label file
     readLabel(opt.labelfile)
+    -- reading means and variances from global norm
     local means, variances
     if (opt.globalnorm~='') then
         means, variances = readglobalnorm(opt.globalnorm)
     end
+    -- training
     if (opt.scpfile~='') then
+        -- reading data file names
     	local trainfeatfilelist = opt.scpfile
     	local listfile = io.open(trainfeatfilelist, 'r')
     	while (true) do
             trainData = readDataScp2(listfile, opt.filenum, means, variances)
+	    -- training procedure
             if (trainData~=nil) then
             	local shuffleddata = torch.randperm(trainData:size())
             	train(shuffleddata)
@@ -59,10 +62,15 @@ function mainscp()
     	print('average row correct: ' .. (confusion.averageValid*100) .. '%')
     	print('average rowUcol correct (VOC measure): ' .. (confusion.averageUnionValid*100) .. '%')
     	print('global correct: ' .. (confusion.totalValid*100) .. '%')
+	-- store the file names of data tensors
 	local filename = paths.concat(opt.save,"trainlist")
-	torch.save(filename, tensorList)
+        local tensorf = {
+	    list = tensorList,
+	    cvind = #tensorList
+        }
+	torch.save(filename, tensorf)
     end
-    local index = #tensorList
+    local index = #tensorList	-- where the training data ends
 
     -- cross validation
     if (opt.cvscpfile~='') then

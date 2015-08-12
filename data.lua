@@ -30,9 +30,9 @@ math.randomseed(os.time())
 --       -- end
 
 --       for h = 1, height do
---          for m = 1, nfeats do
+--          for m = 1, ndynamic do
 --             for w = 1, width do
---                data[i][m][h][w] = tb[1+w+(m-1)*width+(h-1)*nfeats*width]
+--                data[i][m][h][w] = tb[1+w+(m-1)*width+(h-1)*ndynamic*width]
 --             end
 --          end
 --       end
@@ -94,7 +94,7 @@ end
 --       end
 --    end
 
---    local tdata = torch.Tensor(#lines, nfeats, height, width)
+--    local tdata = torch.Tensor(#lines, ndynamic, height, width)
 --    local tlabels = torch.Tensor(#lines,1)
 
 --    parsefbank(lines, tdata, tlabels)
@@ -118,13 +118,14 @@ function readDataScp2(listfile,filenum,means,variances)
          filename = paths.basename(line)
          local chunk = filename:split('_')
          print("Reading feature from "..line)
+         assert(io.open(line),"File " .. line .. " does not exist!")
          local feat = loadhtk(line, frameExt)
          for i=1,feat:size(1) do
             feats[#feats+1] = feat[i]
             if (nlabels~=0) then
                labels[#feats] = filelabel[chunk[1]]
             else
-               labels[#feats] = 0
+               labels[#feats] = 1
             end
          end
       else
@@ -144,9 +145,8 @@ function readDataScp2(listfile,filenum,means,variances)
          tdata[i]:map2(means, variances, function(data,mean,variance) return (data+mean)*variance end)
       end
    end
-   local tdata = nn.Reshape(#feats, height, nfeats, width):forward(tdata)
+   local tdata = nn.Reshape(#feats, height, ndynamic, width):forward(tdata)
    tdata = tdata:transpose(2,3)
-   
    local Data = {
       data = tdata,
       labels = tlabels,

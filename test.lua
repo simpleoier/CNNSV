@@ -6,13 +6,11 @@ testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 function test()
    -- local vars
    local time = sys.clock()
-
    -- averaged param use?
    if average then
       cachedparams = parameters:clone()
       parameters:copy(average)
    end
-
    -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
    model:evaluate()
 

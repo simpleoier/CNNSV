@@ -62,19 +62,13 @@ end
 print '==> defining training procedure'
 
 function train(shuffleddata)
-
    -- epoch tracker
    epoch = epoch or 1
-
    -- local vars
    local time = sys.clock()
-
    -- set model to training mode (for modules that differ in training and testing, like Dropout)
    model:training()
-
-   -- shuffle at each epoch
-   -- shuffle = torch.randperm(trsize)
-
+   
    -- do one epoch
    print('==> doing epoch on training data:')
    print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
@@ -101,57 +95,56 @@ function train(shuffleddata)
          inputs[i-t+1] = input
          targets[i-t+1] = target
       end
-      -- targets = targets:squeeze(2)
 
       -- create closure to evaluate f(X) and df/dX
       local feval = function(x)
-                        -- get new parameters
-                        if x ~= parameters then
-                           parameters:copy(x)
-                        end
+            -- get new parameters
+            if x ~= parameters then
+               parameters:copy(x)
+            end
 
-                        -- reset gradients
-                        gradParameters:zero()
+            -- reset gradients
+            gradParameters:zero()
 
-                        -- f is the average of all criterions
-                        local f = 0
+            -- f is the average of all criterions
+            local f = 0
 
-                        local outputs = model:forward(inputs)
-                        local err = criterion:forward(outputs, targets)
-                        f = f + err
+            local outputs = model:forward(inputs)
+            local err = criterion:forward(outputs, targets)
+            f = f + err
 
-                        -- estimate df/dW
-                        local df_do = criterion:backward(outputs, targets)
-                        model:backward(inputs, df_do)
-                        -- update confusion
-                        confusionBatch:batchAdd(outputs, targets)
-                        confusion:batchAdd(outputs, targets)
+            -- estimate df/dW
+            local df_do = criterion:backward(outputs, targets)
+            model:backward(inputs, df_do)
+            -- update confusion
+            confusionBatch:batchAdd(outputs, targets)
+            confusion:batchAdd(outputs, targets)
 
-                        correct = correct or 0
-                        wrong = wrong or 0
-                        for i=1,inputs:size(1) do
-                           local maxindex,maxpred
-                           maxindex = 1
-                           maxpred = outputs[i][1]
-                           for j=2,outputs:size(2) do
-                              if outputs[i][j]>maxpred then
-                                 maxpred = outputs[i][j]
-                                 maxindex = j
-                              end
-                           end
-                           if (maxindex==targets[i]) then
-                              correct = correct+1
-                           else
-                              wrong = wrong+1
-                           end
-                        end
+            correct = correct or 0
+            wrong = wrong or 0
+            for i=1,inputs:size(1) do
+               local maxindex,maxpred
+               maxindex = 1
+               maxpred = outputs[i][1]
+               for j=2,outputs:size(2) do
+                  if outputs[i][j]>maxpred then
+                     maxpred = outputs[i][j]
+                     maxindex = j
+                  end
+               end
+               if (maxindex==targets[i]) then
+                  correct = correct+1
+               else
+                  wrong = wrong+1
+               end
+            end
 
-                        -- normalize gradients and f(X)
-                        gradParameters:div(inputs:size(1))
-                        f = f/inputs:size(1)
-                        -- return f and df/dX
-                        return f,gradParameters
-                    end
+            -- normalize gradients and f(X)
+            gradParameters:div(inputs:size(1))
+            f = f/inputs:size(1)
+            -- return f and df/dX
+            return f,gradParameters
+      end
 
       -- optimize on current mini-batch
       if optimMethod == optim.asgd then
@@ -163,11 +156,11 @@ function train(shuffleddata)
 
    -- time taken
    time = sys.clock() - time
+   print("\n==> time to learn one batch = " .. (time) .. 's')
    time = time / trainData:size()
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
-   -- print confusion matrix
-   -- print(confusion)
+   -- update confusion matrix for batch
    confusionBatch:updateValids()
    print('average row correct: ' .. (confusionBatch.averageValid*100) .. '%')
    print('average rowUcol correct (VOC measure): ' .. (confusionBatch.averageUnionValid*100) .. '%')
@@ -196,13 +189,11 @@ end
 function crossValidate()
    -- local vars
    local time = sys.clock()
-
    -- averaged param use?
    if average then
       cachedparams = parameters:clone()
       parameters:copy(average)
    end
-
    -- set model to evaluate mode (for modules that differ in training and testing, like Dropout)
    model:evaluate()
 
@@ -240,6 +231,7 @@ function crossValidate()
 
    -- timing
    time = sys.clock() - time
+   print("==> time to test 1 batch = " .. (time) .. 's'..'\n')
    time = time / cvData:size()
    print("==> time to test 1 sample = " .. (time*1000) .. 'ms'..'\n')
 
