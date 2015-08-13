@@ -24,7 +24,7 @@ if not (opt) then
     cmd:option('-labelfile', '', 'name a file storing the labels for each file in scp')
     cmd:option('-cvscpfile', '', 'name a file storing all the filenames of cv data')
     cmd:option('-globalnorm', '', 'normalization file contains the means and variances')
-    cmd:option('-tensorList', 'tensorList', 'data stored as torch tensor format')
+    cmd:option('-tensorList', 'trainList', 'data stored as torch tensor format')
     -- global:
     cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
     cmd:option('-threads', 4, 'number of threads')
@@ -49,11 +49,12 @@ if not (opt) then
     cmd:option('-weightDecay', 0, 'weight decay (SGD only)')
     cmd:option('-momentum', 0.7, 'momentum (SGD only)')
     cmd:option('-t0', 1, 'start averaging at t0 (ASGD only), in nb of epochs')
-    cmd:option('-maxIter', 2, 'maximum nb of iterations for CG and LBFGS')
+    cmd:option('-maxIter', 2, 'maximum nb of iterations for CG or LBFGS')
     cmd:option('-type', 'double', 'type: double | float | cuda')
     cmd:option('-crossvalid', 0, 'use test for cross validaton set which do not extract bottleneck feature and compute the accuracy,0 is false, 1 is true')
     -- testing:
     cmd:option('-featOut', '', 'the location of the output feature')
+    cmd:option('-trainIter', 1, 'nb of iterations for training')
     cmd:text()
     opt = cmd:parse(arg or {})
 end
@@ -96,18 +97,7 @@ height2 = math.floor((math.floor((height-filtsizeh+1)/poolsize)-filtsizeh+1)/poo
 width2 = math.floor((math.floor((width-filtsizew+1)/poolsize)-filtsizew+1)/poolsize)
 
 -- load data from torch format
-local filename = paths.concat(opt.save, opt.tensorList)
-tensorList = io.open(filename)
-if (tnesorList) then
-    print("find tensor list in "..filename)
-    tensorList:close()
-    readData = torch.load(filename)
-    tensorList = readData.list
-    cvind = readData.cvind
-else
-    print("can not find tensor list in "..filename)
-    tensorList = {}
-end
+readTensorList()
 
 print("learning rate = "..opt.learningRate, "frame extension = "..opt.fext)
 
@@ -123,3 +113,4 @@ else
         newmodel()
     end
 end
+printmodel()

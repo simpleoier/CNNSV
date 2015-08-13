@@ -161,6 +161,23 @@ function readDataScp2(listfile,filenum,means,variances)
 end
 
 function readDataTensor(filename)
+   print("Reading featrue from "..filename)
    Data = torch.load(filename)
    return Data
+end
+
+function readTensorList()
+    local filename = paths.concat(opt.save, opt.tensorList)
+    tensorList = io.open(filename)
+    if (tnesorList) then
+        print("find tensor list in "..filename)
+        tensorList:close()
+        readData = torch.load(filename)
+        tensorList = readData.list
+        cvind = readData.cvind
+    else
+        print("can not find tensor list in "..filename)
+        tensorList = {}
+        cvind = 0
+    end
 end

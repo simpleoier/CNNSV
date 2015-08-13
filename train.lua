@@ -71,7 +71,7 @@ function train(shuffleddata)
    
    -- do one epoch
    print('==> doing epoch on training data:')
-   print("==> online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
+   print("==> Iteration # " .. trainIter .. " online epoch # " .. epoch .. ' [batchSize = ' .. opt.batchSize .. ']')
    for t = 1,trainData:size(),opt.batchSize do
       -- disp progress
       xlua.progress(t, trainData:size())
@@ -158,7 +158,7 @@ function train(shuffleddata)
    time = sys.clock() - time
    print("\n==> time to learn one batch = " .. (time) .. 's')
    time = time / trainData:size()
-   print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
+   print("==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    -- update confusion matrix for batch
    confusionBatch:updateValids()
@@ -203,7 +203,6 @@ function crossValidate()
    if opt.type == 'double' then inputs = inputs:double()
    elseif opt.type == 'cuda' then inputs = inputs:cuda() end
 
-   setnum = setnum or 0
    setnum = setnum + 1
    -- test over test data
    print('==> testing on test set'..setnum)
@@ -231,9 +230,9 @@ function crossValidate()
 
    -- timing
    time = sys.clock() - time
-   print("==> time to test 1 batch = " .. (time) .. 's'..'\n')
+   print("==> time to test 1 batch = " .. (time) .. 's')
    time = time / cvData:size()
-   print("==> time to test 1 sample = " .. (time*1000) .. 'ms'..'\n')
+   print("==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    -- averaged param use?
    if average then

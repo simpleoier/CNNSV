@@ -86,7 +86,7 @@ function newmodel()
          model = nn.Sequential()
 
          -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
-         model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsizew, filtsizeh))
+         model:add(nn.SpatialConvolutionMM(ndynamic, nstates[curState], filtsizew, filtsizeh))
          model:add(nn.ReLU())
          model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))
          curState = curState+1
@@ -125,7 +125,7 @@ function newmodel()
          model = nn.Sequential()
 
          -- stage 1 : filter bank -> squashing -> L2 pooling -> normalization
-         model:add(nn.SpatialConvolutionMM(nfeats, nstates[curState], filtsizew, filtsizeh))    -- output size is {nstates[curState],height-filtsizeh+1, width-filtsizew+1}
+         model:add(nn.SpatialConvolutionMM(ndynamic, nstates[curState], filtsizew, filtsizeh))    -- output size is {nstates[curState],height-filtsizeh+1, width-filtsizew+1}
          model:add(nn.Tanh())
          model:add(nn.SpatialMaxPooling(poolsize,poolsize,poolsize,poolsize))    -- output size is {nstates[curState], (height-filtersizeh+1)/poolsize, (width-filtersizew+1)/poolsize} as {nstates[curState], height1, width1}
          curState = curState+1
